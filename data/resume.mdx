@@ -1,0 +1,105 @@
+---
+draft: false
+---
+
+###### **Name:** Shibi Suriya P
+
+###### **LinkedIn:** [https://linkedin.com/in/shibisuriya](https://linkedin.com/in/shibisuriya)
+
+###### **GitHub:** [https://www.github.com/shibisuriya](https://www.github.com/shibisuriya)
+
+###### **Website:** [https://www.shibi.dev](https://www.shibi.dev)
+
+# About me
+
+Hi, I'm Shibi! I'm a **full-stack developer** with **4 years of experience**, specialising in backend engineering, infrastructure,
+build systems, developer tools, application security, technical writing, CI/CD, container orchestration,
+system administration and distributed systems.
+
+# Skills
+
+## Programming languages
+
+Java, Javascript/Typescript, SQL, Python, Golang, Shell script, Markdown/MDX, YAML, lua, HTML, CSS,
+C/C++.
+
+## Frameworks and Libraries
+
+Spring, Node.js, Redis, Flask, Express.js, React, Redux, Vue.js, Angular, Jest, Socket.IO,
+Pandas, Beautiful Soup, TanStack Query, Zustand, Next.js, Nuxt.js, C++ STL.
+
+## Tools and Technologies
+
+PostgreSQL, Docker, AWS, GNU/Linux, Ansible, Kubernetes, Jenkins, Git/Github,
+Grafana, ngrok, QEMU, Webpack, Vite, pnpm, ESLint, Pandoc, Vitepress, Github actions, Nix.
+
+# Work Experience
+
+## May 2023 - Present, [Kissflow](https://kissflow.com/) - Software Engineer
+
+Kissflow is an intuitive no-code/low-code platform that lets business users create complex
+internal apps and external portals by dragging and dropping prebuilt UI elements and
+configuring them.
+
+### Low-Code No-Code SDK and Custom Form Fields
+
+'Kissflow Forms' have a carefully curated set of built-in form fields that can be used to
+create most dynamic forms. However, if the builtin form fields don’t fulfill users' needs,
+they can develop their own form fields (Custom Form Fields) using
+[kf-lcnc-sdk](https://github.com/kissflow/lcnc-sdk-js). I made major changes to the
+no-code/low-code platform (both Web and PWA) to accommodate custom form fields: a
+'Pro-code' functionality.
+
+#### Build tool
+
+- Built a CLI application using Node.js and [EJS](https://ejs.co) which lets users create projects (Kissflow
+  custom components) that have Webpack, ESLint, HTTP server (Dev server), forward proxy,
+  Prettier, etc. configurated to seamlessly work with Kissflow, so that the users can
+  focus on developing the business logic of the custom component instead of worrying about
+  setting up a project.
+
+- Setup CD using Github Actions to automatically release patch versions of packages to npm
+  registry when a pull request is merged to the master branch.
+
+- The users can run the project (dev build) on their machine and preview how the modules
+  exported by the project will look and behave across the platform in different scenarios,
+  allowing them to iterate rapidly. The browser prevented loading of assets served by the
+  dev server into the platform (webapp) due to [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP).
+  I configured a forward proxy in the dev server that allows the browser to load the entire platform through it. Now that the
+  platform and the local files are loaded from the same origin, the Content Security
+  Policy is bypassed.
+
+#### Dynamic Loader and API
+
+- Built a Dynamic Loader using Webpack's [Module Federation](https://webpack.js.org/concepts/module-federation) to load modules exported by
+  Custom Form Fields ([Dynamic Remotes](https://webpack.js.org/concepts/module-federation/#dynamic-remote-containers)) into the platform during runtime.
+
+- Designed and implemented a simple and intuitive React props-based API using which the
+  modules of custom form fields interact with the platform.
+
+### Developer Experience
+
+- Implemented live reloading using websocket and HtmlWebpackPlugin.
+
+- Made multiple tweeks to Jenkins.
+
+## Mar 2022 - May 2023, [Facilio](https://facilio.com) - Member of Technical Staff
+
+- Rewrote/refactored multiple critical legacy features to increase their efficiency and
+  dependability while adhering to modern software engineering best practices.
+
+- Separated authentication related components and move it to a separate repository, so
+  that the authentication services can be deployed independently.
+
+## Jun 2021 - Mar 2022, [Fintuple Technolgies](https://www.fintuple.com) - Product Engineer
+
+- Making improvements to Angular projects by fixing errors, improving performance and
+  adding new features.
+
+- Implemented CI/CD for multiple Angular projects using Github Actions.
+
+- Built a web scraper to scrape price data from Bombay/National Stock Exchange’s official websites.
+
+- Built a REST API to extract structured text data from images of Indian OVDs (Officially
+  Valid Documents) such as Aadhaar card, driving license, PAN card, etc. using Amazon
+  Textract and AWS Lambda.

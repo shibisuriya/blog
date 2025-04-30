@@ -1,0 +1,115 @@
+---
+title: 'How to manage notes and todos related to a software project within its git repo using global .gitignore?'
+date: '2024-06-03'
+lastmod: '2024-06-03'
+tags: ['developer-productivity', 'note-taking', 'neovim']
+draft: false
+summary: 'By configuring global gitignore and tweeking '
+images: ['/static/images/global-gitignore/note-taking.png']
+---
+
+![Note taking](/static/images/global-gitignore/note-taking.png)
+
+## But why would we want to store notes and todos related to a software project within its git repo?
+
+Imagine having a codebase open in a code editor, being able to access / store notes **related** to the codebase without having to leave the code editor is highly efficient.
+
+## How to store notes and todos inside a project's git repo?
+
+We can simply create files inside the project's git repo and store notes and todos associated with the project in those files.
+The problem with this approach is, Git won't ignore these files (unless we add them to .gitignore), we might accidentally commit and push sensitive information that we might have stored in our
+notes such as login credentials, jwt tokens, secret keys, etc.
+
+Obiviously we can add the files in which notes are stored to the repo's .gitignore, but updating a project's .gitignore file for personal preferences, especially when multiple people are working on it,
+is not good...
+
+## Global Git ignore
+
+To configure Git to ignore specific files and directories across all repositories on your machine, create a `.gitignore_global` file in your home directory. Add the files and directories you want to ignore to this file.
+
+```config
+temp-notes
+shibi-todos.md
+temp-secrets.md
+```
+
+Next, add the following lines to your [`.gitconfig`](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup) file to ensure Git uses the global ignore file:
+
+```config
+[core]
+    excludesfile = ~/.gitignore_global
+```
+
+## Code editors ignoring files ignored by git
+
+Mordern code editors are smart, they don't list files ignored by git in the ['Quick Open'](https://code.visualstudio.com/docs/editor/editingevolved) menu. This is intentional, since we don't want our code editors to search for files inside certain directories, for example, inside [`node_modules`](https://docs.npmjs.com/about-packages-and-modules). So we have to explicitly instruct the code editors to not ignore the folders in which we will be storing our notes.
+
+### Visual Studio Code
+
+To prevent vscode from ignoring our notes directory (named `temp-notes`, in this case),
+
+```zsh
+❯ tree --gitignore
+.
+├── package.json
+├── pnpm-lock.yaml
+├── public
+│   └── index.html
+├── src
+│   ├── App.jsx
+│   └── index.js
+├── temp-notes
+│   └── main.md
+└── webpack.config.js
+
+4 directories, 7 files
+```
+
+add the following lines of code in, either ['User Settings' or 'Workspace Settings'](https://code.visualstudio.com/docs/getstarted/settings),
+
+```json
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/temp-notes": false
+  }
+}
+```
+
+![Hello](/static/images/global-gitignore/result1.png)
+
+### Neovim
+
+To prevent [Neovim](https://github.com/neovim/neovim) + [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) + [ripgrep](https://github.com/BurntSushi/ripgrep) from ignoring `temp-notes` directory while searching for files in a git repo, we have to create a file named `.rgignore` in the user's home directory and add the line to it.
+
+```bash
+!**/temp-notes
+```
+
+![.rgignore](/static/images/global-gitignore/nvim-rgignore.png)
+
+Likewise, most popular code editors can be configured to search for files and text within a directory that git is set to ignore.
+
+## What if I accidentally delete my repo?
+
+We might unintentionally delete a Git repo, assuming that all commits have been pushed to a remote, without realizing that it might hold crucial information.
+
+To avoid this situation, we can store our notes outside the repo and symlink it inside the repo into a directory that is ignored by git globally.
+
+Let's assume our notes are located at `~/Desktop/office-notes/startup-feature-x` and our project's Git repository is at `~/Desktop/projects/startup-frontend`.
+
+Then, we can symlink our notes directory to a directory inside the codebase.
+
+```bash
+cd ~/Desktop/projects/startup-frontend
+mkdir temp-notes # First, create a directory that is ignored by git (using .gitignore_global).
+ln -s ~/Desktop/office-notes/startup-feature-x ~/Desktop/projects/startup-frontend/temp-notes/
+```
+
+This way, our notes are stored outside the codebase but can be accessed directly from within the codebase.
+
+## Backup
+
+Now that the notes are outside the codebase, in their own directory, we can use Git and GitHub to back them up, separately.

@@ -1,0 +1,65 @@
+---
+title: 'What is module federation?'
+date: '2024-07-04'
+lastmod: '2024-07-04'
+tags: ['microservices', 'module-federation', 'CI/CD', 'webpack', 'dx', 'developer-experience']
+draft: false
+summary: 'Release of Tailwind Nextjs Starter Blog template v2.0, refactored with Nextjs App directory and React Server Components setup.Discover the new features and how to migrate from V1.'
+images: ['/static/images/twitter-card.png']
+---
+
+# Introduction to module federation
+
+This is a breif introduction to module federation.
+
+# The problem statement:
+
+Let's say you are working on a large frontend project with thousands of modules and millions of lines of code,
+even when you make a small change to the project, lets say you changed a single line of text in some .jsx file, the
+entire project needs to be rebuilt again and deployed... This is such a waste of time and resource.
+
+In an ideal setup, the parts of the codebase that were changed should only be rebuild and deployed.
+
+This is the problem that module federation tries to address.
+
+# Can breaking you large codebase into smaller units (npm packages) and sharing code between these units help?
+
+It is easier to share modules between nodejs based projects during build time,
+
+If you intend to make a module from a package available for consumption by other projects during build time, follow these steps:
+
+1. Export the desired module(s) that you wish to share with other projects. This can be achieved by updating the package.json file of your package, specifically by modifying either the main or exports field.
+2. Install this package into your project using,
+
+```bash
+   npm install <package's-name>
+```
+
+import and use the exported module(s) in your project.
+
+```js
+import <module-name> from <package's-name>;
+```
+
+The problem with this approach is whenever there is a change in your package the project also needs to be rebuilt and deployed since your project depends on this
+package.
+
+# How does module federation address this problem?
+
+Module federation lets us share modules between projects in runtime!
+
+Projects that share modules with other projects are called remotes.
+
+Projects that consume modules shared by remotes are called containers...
+
+A project has the capability to function as both a remote and a container. In this context, it implies that the project can share modules with other containers and, simultaneously, consume modules that have been shared by other remotes.
+
+Module federation was first released as
+
+# Some sensible ways to organize frontend projects that use module federation.
+
+## Multiple repositories:
+
+We can share modules between multiple repositories
+
+## Monorepos:

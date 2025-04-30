@@ -1,0 +1,45 @@
+---
+title: 'Removing `node_modules` and `lock files` using shell script'
+date: '2024-06-03'
+lastmod: '2024-06-03'
+tags: ['shell-script', 'zsh', 'dotfiles', 'Node.js', 'developer-productivity', 'unix', 'linux']
+draft: false
+summary: 'By configuring global gitignore and tweeking '
+images: ['/static/images/global-gitignore/note-taking.png']
+---
+
+![Note taking](/static/images/node-modules-meme.png)
+
+I am sometimes put into positions where I have to constantly install and uninstall packages
+to check it is suitable for our project...
+
+```bash
+#!/bin/zsh
+
+# List files and directories.
+echo "The following files and directories will be deleted: \n"
+fd -t f 'yarn.lock' -I
+fd -t f 'package-lock.json' -I
+fd -t f 'pnpm-lock.yaml' -I
+fd -t f '.DS_Store' -H -I
+
+fd -t d 'node_modules' -I
+
+# Removing files and directories.
+fd -t f 'yarn.lock' -I -x rm
+fd -t f 'package-lock.json' -I -x rm
+fd -t f 'pnpm-lock.yaml' -I -x rm
+fd -t f '.DS_Store' -H -I -x rm
+
+fd -t d 'node_modules' -I -x rm -rf
+```
+
+[My dotfiles](https://github.com/shibisuriya/.dotfiles/blob/main/zsh/scripts/node_scrub.zsh)
+
+```bash
+chmod 777 ~/scripts/node_scrub.zsh
+```
+
+```bash
+alias node-scrub="~/scripts/node_scrub.zsh"
+```

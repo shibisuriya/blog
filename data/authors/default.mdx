@@ -1,16 +1,34 @@
 ---
-name: Tails Azimuth
+name: Shibi Suriya
 avatar: /static/images/avatar.png
-occupation: Professor of Atmospheric Science
-company: Stanford University
-email: address@yoursite.com
-twitter: https://twitter.com/Twitter
-linkedin: https://www.linkedin.com
-github: https://github.com
+occupation: Software Engineer
+company: Kissflow
+# email: address@yoursite.com
+# twitter: https://twitter.com/Twitter
+linkedin: https://www.linkedin.com/in/shibisuriya
+github: https://github.com/shibisuriya
 ---
 
-Tails Azimuth is a professor of atmospheric sciences at the Stanford AI Lab. His research interests includes complexity modelling of tailwinds, headwinds and crosswinds.
+export function getCareerDuration() {
+  const startDate = new Date(2021, 6, 21)
+  const today = new Date()
 
-He leads the clean energy group which develops 3D air pollution-climate models, writes differential equation solvers, and manufactures titanium plated air ballons. In his free time he bakes raspberry pi.
+let years = today.getFullYear() - startDate.getFullYear()
+let months = today.getMonth() - startDate.getMonth()
+let days = today.getDate() - startDate.getDate()
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
+if (days < 0) {
+months -= 1
+days += new Date(today.getFullYear(), today.getMonth(), 0).getDate()
+}
+if (months < 0) {
+years -= 1
+months += 12
+}
+
+return { years, months, days }
+}
+
+export const careerDuration = getCareerDuration()
+
+I am a full stack developer with **{careerDuration.years} years, {careerDuration.months} months and {careerDuration.days} days** of experience, currently working at <a href="https://kissflow.com/" target="_blank">Kissflow</a>.
