@@ -9,6 +9,7 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import tagData from 'app/tag-data.json'
+import { BlogStatus } from '@/components/BlogStatus'
 
 interface PaginationProps {
   totalPages: number
@@ -146,16 +147,7 @@ export default function ListLayoutWithTags({
                               className="flex text-gray-900 dark:text-gray-100"
                             >
                               <div>
-                                {draft ? (
-                                  <span className="m-1 inline-block rounded-lg bg-red-500 p-2 text-xs text-white">
-                                    DRAFT
-                                  </span>
-                                ) : (
-                                  <span className="m-1 inline-block rounded-lg bg-green-500 p-2 text-xs text-white">
-                                    PUBLISHED
-                                  </span>
-                                )}{' '}
-                                {title}
+                                <BlogStatus isPublished={!draft} /> {title}
                               </div>
                             </Link>
                           </h2>
