@@ -40,9 +40,10 @@ jobs:
           UNOPTIMIZED: 1
           BASE_PATH: ${{ steps.configurepages.outputs.base_path }}
 
-      - name: Use Pandoc to convert my resume markdown file to a .pdf file
+      - name: Use Pandoc to convert my resume markdown file to a .pdf & .docx file
         run: |
           docker run --rm -v "$(pwd)":/data pandoc/latex ./data/resume/index.mdx -o ./out/static/resume.pdf
+          docker run --rm -v "$(pwd)":/data pandoc/latex ./data/resume/index.mdx -o ./out/static/resume.docx
 
       - uses: actions/upload-pages-artifact@v3
         with:
