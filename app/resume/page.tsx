@@ -4,7 +4,7 @@ import { Resume, allResumes } from 'contentlayer/generated'
 
 export const metadata = genPageMetadata({ title: 'Resume', description: "Shibi Suriya's resume" })
 
-export default function Resume() {
+export default function ResumePage() {
   const resume: Resume = allResumes[0]
   return (
     <>
