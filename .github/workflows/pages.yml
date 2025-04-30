@@ -43,6 +43,10 @@ jobs:
         with:
           path: ./out
 
+      - name: Use Pandoc to convert my resume markdown file to a .pdf file
+        run: |
+          docker run --rm -v "$(pwd)":/data pandoc/latex index.mdx -o output.pdf
+
   # Deployment job
   deploy:
     environment:
