@@ -42,7 +42,18 @@ jobs:
 
       - name: Use Pandoc to convert my resume markdown file to a .pdf & .docx file
         run: |
-          docker run --rm -v "$(pwd)":/data pandoc/latex ./data/resume/index.mdx -o ./out/static/shibi-resume.pdf
+          docker run --rm -v "$(pwd)":/data pandoc/latex \
+                                     ./data/resume/index.mdx -o ./out/static/shibi-resume.pdf \
+                                       -V geometry:top=1in \
+                                       -V geometry:bottom=1in \
+                                       -V geometry:left=1in \
+                                       -V geometry:right=1in \
+                                       -V mainfont="Arial" \
+                                       -V colorlinks \
+                                       -V fontsize=12pt \
+                                       -V linestretch=1
+
+                                     
           docker run --rm -v "$(pwd)":/data pandoc/latex ./data/resume/index.mdx -o ./out/static/shibi-resume.docx
 
       - uses: actions/upload-pages-artifact@v3
