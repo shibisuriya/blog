@@ -149,7 +149,7 @@ export const Authors = defineDocumentType(() => ({
 
 export const Resume = defineDocumentType(() => ({
   name: 'Resume',
-  filePathPattern: 'resume.mdx',
+  filePathPattern: 'resume/index.mdx',
   contentType: 'mdx',
   fields: {},
   computedFields,
