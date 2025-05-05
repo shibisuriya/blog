@@ -95,6 +95,18 @@ module.exports = () => {
         use: ['@svgr/webpack'],
       })
 
+      config.module.rules.push({
+        test: /\.ya?ml$/,
+        oneOf: [
+          {
+            resourceQuery: /stream/,
+            options: { asStream: true },
+            loader: 'yaml-loader'
+          },
+          { loader: 'yaml-loader' }
+        ]
+      })
+
       return config
     },
   })
