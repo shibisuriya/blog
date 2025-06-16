@@ -35,9 +35,15 @@ sensitive information to it. Make sure to clean up the
 commit history if you accidentally pushed sensitive
 information to the remote.
 
-## nix-darwin
+## Setups
 
-1. Install nix for macOS. Do a multi user installation.
+As mentioned earlier, this blog also serves as a README.md file for my dotfiles repo,
+I use the instructions written below when setting up a new computer.
+Skip the steps that are irrelavant for your setup.
+
+### macOS
+
+1. [Install nix for macOS](https://nixos.org/download/), do a multi user installation.
 
 2. Clone the dotfiles repo,
 
@@ -48,49 +54,54 @@ nix-shell -p git --run "git clone --recurse-submodules https://github.com/shibis
 3. Install nix-darwin
 
 ```bash
-nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#care_taker_1
+nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#shibi
 ```
 
-4. The `darwin-rebuild` command
+Note: `nix-darwin` in the above command refers to a flake input.
 
-Ones nix-darwin is installed, we will have access to the
-`darwin-rebuild` command,
+Ones run, we will have access to the `darwin-rebuild` command.
 
 ```bash
-darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#care_taker_1
+darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#shibi
 ```
 
-5. Install TPM,
+4. Install 'Apple Command Line Tools (CLT)'
 
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
+Neovim Mason uses Apple CLT to build some language servers that I use from source code.
 
-Note: This step needs to be automated.
-
-7. Install 'Apple Command Line Tools (CLT)'
+You can skip this step if your setup doesn't depend on CLT.
 
 ```bash
 xcode-select install
 ```
 
-CLT is a subset of Xcode, the command above doesn't install full Xcode.
+CLT is a subset of Xcode, the command above will not install complete Xcode.
 
-Note: This step can't be automated using nix & must be performed manually.
+Note: This step can't be automated using nix and must be performed manually.
 
-6. Symlink your dotfiles to appropriate locations on your
-   machine using GNU Stow,
+5. Install TPM - Tmux Package Manager,
 
 ```bash
-./stow.zsh # Uses GNU Stow under the hood.
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+Note: This step can be automated using nix.
+
+6. Symlink the dotfiles to their target locations using GNU Stow,
+
+```bash
+cd ~/.dotfiles
+./stow.zsh # A shell script, uses GNU Stow under the hood.
 ```
 
 I understand that 'nix home manager' can handle this more
 gracefully, but for now I am satisfied with Stow.
 
-7. Update you git configuration (this step needs to be
+7. Update the `.gitconfig` file (this step needs to be
    automated, I am performing this step manually for now
-   because I don't want my email, etc. to leak).
+   because I don't want to store my email, full name, etc. in the .gitconfig file publically).
+
+8. Manually install non-free software like Chrome, Obsidian, etc.
 
 ## Docker image
 
