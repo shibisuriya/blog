@@ -9,7 +9,10 @@ const RESUME_URL = 'http://localhost:3000/resume'
 ;(async () => {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
-  const browser = await puppeteer.launch()
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  })
   const page = await browser.newPage()
 
   console.log(`⏳ Visiting ${RESUME_URL}...`)
@@ -43,7 +46,7 @@ const RESUME_URL = 'http://localhost:3000/resume'
     buffer = docxBlobOrBuffer as Buffer
   }
 
-  const docxPath = path.join(OUTPUT_DIR, 'resume.docx')
+  const docxPath = path.join(OUTPUT_DIR, 'shibi-resume.docx')
   fs.writeFileSync(docxPath, buffer)
 
   await browser.close()
