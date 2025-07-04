@@ -40,21 +40,26 @@ jobs:
           UNOPTIMIZED: 1
           BASE_PATH: ${{ steps.configurepages.outputs.base_path }}
 
-      - name: Use Pandoc to convert my resume markdown file to a .pdf & .docx file # Use your pc to test/perfect the .pdf & .docx's style.
+      # - name: Use Pandoc to convert my resume markdown file to a .pdf & .docx file # Use your pc to test/perfect the .pdf & .docx's style.
+      #   run: |
+      #     docker run --rm -v "$(pwd)":/data pandoc/latex \
+      #                                ./data/resume/index.mdx -o ./out/static/shibi-resume.pdf \
+      #                                  -V geometry:top=1in \
+      #                                  -V geometry:bottom=1in \
+      #                                  -V geometry:left=1in \
+      #                                  -V geometry:right=1in \
+      #                                  -V mainfont="Arial" \
+      #                                  -V colorlinks \
+      #                                  -V fontsize=12pt \
+      #                                  -V linestretch=1
+      #
+      #
+      #     docker run --rm -v "$(pwd)":/data pandoc/latex ./data/resume/index.mdx -o ./out/static/shibi-resume.docx
+
+      - name: Export resume to PDF & DOCX using Puppeteer
         run: |
-          docker run --rm -v "$(pwd)":/data pandoc/latex \
-                                     ./data/resume/index.mdx -o ./out/static/shibi-resume.pdf \
-                                       -V geometry:top=1in \
-                                       -V geometry:bottom=1in \
-                                       -V geometry:left=1in \
-                                       -V geometry:right=1in \
-                                       -V mainfont="Arial" \
-                                       -V colorlinks \
-                                       -V fontsize=12pt \
-                                       -V linestretch=1
-
-
-          docker run --rm -v "$(pwd)":/data pandoc/latex ./data/resume/index.mdx -o ./out/static/shibi-resume.docx
+          yarn resume:export
+          mv ./dist/* ./out/static/
 
       - uses: actions/upload-pages-artifact@v3
         with:
