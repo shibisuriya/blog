@@ -30,15 +30,21 @@ const RESUME_URL = 'http://localhost:3000/resume'
   })
   console.log(`✅ Saved PDF to ${pdfPath}`)
 
-  // 2. Save DOCX
   const htmlContent = await page.content()
-  const blob = htmlDocx.asBlob(htmlContent)
-  const arrayBuffer = await blob.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
+  const docxBlobOrBuffer = htmlDocx.asBlob(htmlContent)
 
-  const docxPath = path.join(OUTPUT_DIR, 'shibi-resume.docx')
+  let buffer: Buffer
+
+  if (docxBlobOrBuffer instanceof Blob) {
+    const arrayBuffer = await docxBlobOrBuffer.arrayBuffer()
+    buffer = Buffer.from(arrayBuffer)
+  } else {
+    // Already a Node.js Buffer, use as-is
+    buffer = docxBlobOrBuffer as Buffer
+  }
+
+  const docxPath = path.join(OUTPUT_DIR, 'resume.docx')
   fs.writeFileSync(docxPath, buffer)
-  console.log(`✅ Saved DOCX to ${docxPath}`)
 
   await browser.close()
 })()
