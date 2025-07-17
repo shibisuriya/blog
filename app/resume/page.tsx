@@ -2,7 +2,7 @@ import { genPageMetadata } from 'app/seo'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { Resume, allResumes } from 'contentlayer/generated'
 import Pdf from './pdf.svg'
-import Docs from './docs.svg'
+// import Docs from './docs.svg'
 
 export const metadata = genPageMetadata({ title: 'Resume', description: "Shibi Suriya's resume" })
 
@@ -28,6 +28,7 @@ export default function ResumePage() {
                   <Pdf width="50px" height="50px" />
                 </a>
               </div>
+              {/*
               <div>
                 <a
                   href="https://shibisuriya.github.io/blog/static/shibi-resume.docx"
@@ -36,6 +37,7 @@ export default function ResumePage() {
                   <Docs width="50px" height="50px" />
                 </a>
               </div>
+            */}
             </div>
           </div>
         </div>
