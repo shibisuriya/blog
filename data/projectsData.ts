@@ -17,7 +17,7 @@ const projectsData: Project[] = [
   {
     title: 'Classic Slither.io',
     description: `Experience Slither.io gameplay on a Nokia 6110-style snake game, powered by React and WebRTC. Play against bots or your friends.`,
-    imgSrc: '/static/gifs/slither-io-gameplay.gif',
+    imgSrc: '/static/images/projects/slither-io-gameplay.gif',
     href: 'https://github.com/shibisuriya/classic-slither.io',
   },
   {
