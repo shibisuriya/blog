@@ -4,7 +4,10 @@ date: '2024-07-04'
 lastmod: '2024-07-04'
 tags: ['dx', 'Developer Experience', 'productivity']
 draft: true
-summary: 'Release of Tailwind Nextjs Starter Blog template v2.0, refactored with Nextjs App directory and React Server Components setup.Discover the new features and how to migrate from V1.'
+summary:
+  'Release of Tailwind Nextjs Starter Blog template v2.0, refactored with Nextjs
+  App directory and React Server Components setup.Discover the new features and
+  how to migrate from V1.'
 images: ['/static/images/twitter-card.png']
 ---
 
@@ -14,35 +17,54 @@ images: ['/static/images/twitter-card.png']
 
 - Remove ESLint webpack plugin from webpack.
 
-- Using vscode ESLint plugin. This plugin allows devs to perform real-time linting of their JavaScript or TypeScript code within the editor as they write, helping to identify and fix syntax errors,
-  code style issues, and potential bugs according to the rules configured in the ESLint configuration file (.eslintrc). The plugin provides immediate feedback and highlights code
-  segments that violate ESLint rules, helping developers maintain code quality and consistency throughout their projects. Additionally, it offers quick fixes and
-  suggestions to resolve issues directly within the editor, enhancing the coding experience and promoting adherence to best practices.
+- Using vscode ESLint plugin. This plugin allows devs to perform real-time
+  linting of their JavaScript or TypeScript code within the editor as they
+  write, helping to identify and fix syntax errors, code style issues, and
+  potential bugs according to the rules configured in the ESLint configuration
+  file (.eslintrc). The plugin provides immediate feedback and highlights code
+  segments that violate ESLint rules, helping developers maintain code quality
+  and consistency throughout their projects. Additionally, it offers quick fixes
+  and suggestions to resolve issues directly within the editor, enhancing the
+  coding experience and promoting adherence to best practices.
 
-- We can lint files that were modified and staged before committing the changes using husky and lint-staged... This prevents devs from
-  commiting changes that have lint errors / warnings. Assuming the changes that get usually made are in small chunks the linting
-  is very fast... Since we are only linting the files that were modifed and not the entire project we save a lot of time and resource.
+- We can lint files that were modified and staged before committing the changes
+  using husky and lint-staged... This prevents devs from commiting changes that
+  have lint errors / warnings. Assuming the changes that get usually made are in
+  small chunks the linting is very fast... Since we are only linting the files
+  that were modifed and not the entire project we save a lot of time and
+  resource.
 
-- We can lint the entire project in the CI/CD pipeline and fail the build if lint issues are found... The dev won't be able to
-  deploy his changes without address the lint issues... Also since the entire project is not getting linted on the dev's machine,
-  wasting the dev's time and hampering his/her ability to iterate, this is a good stategy to keep the quality of the codebase intact.
+- We can lint the entire project in the CI/CD pipeline and fail the build if
+  lint issues are found... The dev won't be able to deploy his changes without
+  address the lint issues... Also since the entire project is not getting linted
+  on the dev's machine, wasting the dev's time and hampering his/her ability to
+  iterate, this is a good stategy to keep the quality of the codebase intact.
 
-- Lint changes that were pushed to the remote using github actions, and prevent code reviews from merging the changes...
+- Lint changes that were pushed to the remote using github actions, and prevent
+  code reviews from merging the changes...
 
-The feedback that you get by writing a piece of code and see how the system reacts to the changes you have made is eminence...
+The feedback that you get by writing a piece of code and see how the system
+reacts to the changes you have made is eminence...
 
-In large projects eslint does more harm than good since it slows down the dev build...
+In large projects eslint does more harm than good since it slows down the dev
+build...
 
-In this youtube shorts video [Evan You](https://evanyou.me/) the create of Vuejs talks about [this concept](https://www.youtube.com/shorts/0jdfB1xWaMo).
+In this youtube shorts video [Evan You](https://evanyou.me/) the create of Vuejs
+talks about [this concept](https://www.youtube.com/shorts/0jdfB1xWaMo).
 
-In this [YouTube video](https://youtu.be/tzr7hrxcwkw?t=90), John Carmack, a legendary game dev, discusses the importance of debuggers and how the best way to understand a
-complicated system is to perform experiments (make slight changes and see how the system reacts to it) on it, instead of reading the code present in the codebase without actually running it.
-.
+In this [YouTube video](https://youtu.be/tzr7hrxcwkw?t=90), John Carmack, a
+legendary game dev, discusses the importance of debuggers and how the best way
+to understand a complicated system is to perform experiments (make slight
+changes and see how the system reacts to it) on it, instead of reading the code
+present in the codebase without actually running it. .
 
 You would be able to catch and fix a lot more bugs when you able to iterate
 
-A person who would have iterated 2x more than a person who is times would have run far more edge cases than a person who
+A person who would have iterated 2x more than a person who is times would have
+run far more edge cases than a person who
 
-So the speed at which we are able to iterate is very important to build robust systems quickly.
+So the speed at which we are able to iterate is very important to build robust
+systems quickly.
 
-You can also observe that vite as well doesn't [do](https://vitejs.dev/guide/features.html#transpile-only) this as well.
+You can also observe that vite as well doesn't
+[do](https://vitejs.dev/guide/features.html#transpile-only) this as well.

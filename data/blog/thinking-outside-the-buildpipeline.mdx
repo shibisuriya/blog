@@ -19,55 +19,87 @@ summary: 'Modifying the build pipeline'
 images: ['static/images/devops-logo.png']
 ---
 
-One of the things that have been bothering me the most recently is the amount of time it
-takes to move changes from my local machine to an environment - deployment duration.
+One of the things that have been bothering me the most recently is the amount of
+time it takes to move changes from my local machine to an environment -
+deployment duration.
 
 ![pipeline](/static/images/pipeline.jpg)
 
-[The place that I currently work at]() already has a modern frontend architecture,
-here the SPAs (Single Page Applications) are structured into modular units called [module federation](https://webpack.js.org/concepts/module-federation/)
-remotes and hosts - microfrontends. The deployment process is already efficient,
-we only have to build and deploy the units in which changes were made, instead of building and deploying the entire project, the webapp will automatically load the most
-recent version of the appropriate microfrontend in runtime, **MAGIC!** Isn't it?
+[The place that I currently work at]() already has a modern frontend
+architecture, here the SPAs (Single Page Applications) are structured into
+modular units called
+[module federation](https://webpack.js.org/concepts/module-federation/) remotes
+and hosts - microfrontends. The deployment process is already efficient, we only
+have to build and deploy the units in which changes were made, instead of
+building and deploying the entire project, the webapp will automatically load
+the most recent version of the appropriate microfrontend in runtime, **MAGIC!**
+Isn't it?
 
-It takes around 5-7 minutes on average to build and deploy a typical microfrontend,
-the pipeline also builds each microfrontend in parallel, so the time taken to build two microfrontend doesn't add up...
-I understand that 5-7 minutes is pretty low already! But sometimes I initiate a build,
-instead of waiting for 5 to 7 minutes for the build to complete, I start doing some other
-work to save some time, working in parallel, just like a computer! Sometimes I get caught up in this "parallel task", and forget to check the status of the build...
+It takes around 5-7 minutes on average to build and deploy a typical
+microfrontend, the pipeline also builds each microfrontend in parallel, so the
+time taken to build two microfrontend doesn't add up... I understand that 5-7
+minutes is pretty low already! But sometimes I initiate a build, instead of
+waiting for 5 to 7 minutes for the build to complete, I start doing some other
+work to save some time, working in parallel, just like a computer! Sometimes I
+get caught up in this "parallel task", and forget to check the status of the
+build...
 
 ## The cure to getting lost!
 
-I have talked to multiple of my friends regarding this, and asked them for advice. Some of the good advices were,
+I have talked to multiple of my friends regarding this, and asked them for
+advice. Some of the good advices were,
 
-- Adding a step in Jenkins which would notify me regarding the status of the build through gchat, discord, vscode, etc. Obiviously email doesn't work for me, because I check my emails less frequently.
+- Adding a step in Jenkins which would notify me regarding the status of the
+  build through gchat, discord, vscode, etc. Obiviously email doesn't work for
+  me, because I check my emails less frequently.
 
-- Taking a tea break after initiating a build instead of doing some work in parallel. **Only doing one thing at a time!**
+- Taking a tea break after initiating a build instead of doing some work in
+  parallel. **Only doing one thing at a time!**
 
-Since I didn't know anything about the build pipelines I was taking tea breaks, I don't have the habbit of drinking tea, so I was pretty much sitting ideally while waiting for the
-build to complete, I have been following the rule of 'doing only one thing at a time' recently... Instead of sitting ideally while the build was in progress, I started to read the build logs to find out steps that were inefficient or redundant, so that I could remove or improve them. I understand that this is not 'doing only one thing at a time', I get bored easily :(
+Since I didn't know anything about the build pipelines I was taking tea breaks,
+I don't have the habbit of drinking tea, so I was pretty much sitting ideally
+while waiting for the build to complete, I have been following the rule of
+'doing only one thing at a time' recently... Instead of sitting ideally while
+the build was in progress, I started to read the build logs to find out steps
+that were inefficient or redundant, so that I could remove or improve them. I
+understand that this is not 'doing only one thing at a time', I get bored easily
+:(
 
-I have been studying build pipelines and deployment stategies recently, after tinkering around for a while, I found that the 'steps' that the pipeline will follow is written inside a file
-that is stored in the project's repository itself! By modifying this file I would be able to control the steps the pipeline will take!
+I have been studying build pipelines and deployment stategies recently, after
+tinkering around for a while, I found that the 'steps' that the pipeline will
+follow is written inside a file that is stored in the project's repository
+itself! By modifying this file I would be able to control the steps the pipeline
+will take!
 
-One fine day while I was doing some chores, I got the idea of building the project on my machine - locally and moving the assets generated to the CDN.
-The advantage to building locally is, we can skip the redundant steps like downloading and installing
-node_modules from the regsitry (if you are actively working on the project you might already have node_modules installed),
-linting the changed files (most IDEs have diagonitics, this would notify you about the lint issues present in the project in real time in your IDE itself),
-running unit tests, etc. You might think that this is whats called a 'manual deployment', but its not, I would only be able to build the project on my machine but
-I can't move the assets generated to the storage bucket directly because I don't have write permission on the storage bucket that serves the assets, I must move
-the assets generated to the storage bucket via the build pipeline since the pipeline has write permisson on the storage bucket. So, I have to first move the assets present
-in my local machine to a remote branch and then move it to the storage bucket via a patched Jenkins job.
+One fine day while I was doing some chores, I got the idea of building the
+project on my machine - locally and moving the assets generated to the CDN. The
+advantage to building locally is, we can skip the redundant steps like
+downloading and installing node_modules from the regsitry (if you are actively
+working on the project you might already have node_modules installed), linting
+the changed files (most IDEs have diagonitics, this would notify you about the
+lint issues present in the project in real time in your IDE itself), running
+unit tests, etc. You might think that this is whats called a 'manual
+deployment', but its not, I would only be able to build the project on my
+machine but I can't move the assets generated to the storage bucket directly
+because I don't have write permission on the storage bucket that serves the
+assets, I must move the assets generated to the storage bucket via the build
+pipeline since the pipeline has write permisson on the storage bucket. So, I
+have to first move the assets present in my local machine to a remote branch and
+then move it to the storage bucket via a patched Jenkins job.
 
-Since we can control the steps that the pipeline would follow by modifying a file that is present in our repo... We can modify the Jenkins file to make the pipeline
-skip steps to build the project to generate assests (since we are building the project locally and moving the assets generated to a remote branch)
+Since we can control the steps that the pipeline would follow by modifying a
+file that is present in our repo... We can modify the Jenkins file to make the
+pipeline skip steps to build the project to generate assests (since we are
+building the project locally and moving the assets generated to a remote branch)
 and add a step to move the assets from the remote branch to the storage bucket.
 
 ## Using webpack dev mode
 
-If you want to reduce the duration further, you might as well build the project in 'development mode'.
-Most build tools have a 'development mode', it allows the product engineers to run the build quickly (less duration compared to when building for distribution),
-make changes to the codebase and observe the effect of those changes on the project immediately, this helps them to iterate rapidly.
+If you want to reduce the duration further, you might as well build the project
+in 'development mode'. Most build tools have a 'development mode', it allows the
+product engineers to run the build quickly (less duration compared to when
+building for distribution), make changes to the codebase and observe the effect
+of those changes on the project immediately, this helps them to iterate rapidly.
 
 For example, webpack's dev mode can be turned on by,
 
@@ -77,7 +109,8 @@ module.exports = {
 }
 ```
 
-Either you could manually request webpack to build the project in dev mode from the cli,
+Either you could manually request webpack to build the project in dev mode from
+the cli,
 
 ```bash
 npm run build
@@ -99,33 +132,43 @@ or, must better, request webpack-dev-server to write to disk.
 }
 ```
 
-If you have your dev build running, you don't even have to build the project from the cli... Just make
-the appropriate changes to the project, webpack will quickly rebuild and write the assets generated to the disk automatically...
-You can then move the assets present in the disk to a github branch and then to an appropriate place via the deployment pipeline.
+If you have your dev build running, you don't even have to build the project
+from the cli... Just make the appropriate changes to the project, webpack will
+quickly rebuild and write the assets generated to the disk automatically... You
+can then move the assets present in the disk to a github branch and then to an
+appropriate place via the deployment pipeline.
 
-To learn more about webpack's modes [click here](https://webpack.js.org/configuration/mode/).
+To learn more about webpack's modes
+[click here](https://webpack.js.org/configuration/mode/).
 
 ## Some of the down sides of deploying assets generated in dev mode,
 
-- Since most build tools typically don't perform optimizations
-  when run in dev mode, bigger build artifacts might be generated as a result,
-  Bigger build artifacts means slightly more loading time for the users.
-  Since the 'user' of the build is not the end user at this point
-  in time, it shouldn't be a big problem.
-  Also if caching is enabled in the http server serving the assets, the browser will load the assets from the disk
-  after the assets have been downloaded atleast ones.
+- Since most build tools typically don't perform optimizations when run in dev
+  mode, bigger build artifacts might be generated as a result, Bigger build
+  artifacts means slightly more loading time for the users. Since the 'user' of
+  the build is not the end user at this point in time, it shouldn't be a big
+  problem. Also if caching is enabled in the http server serving the assets, the
+  browser will load the assets from the disk after the assets have been
+  downloaded atleast ones.
 
-- The loss of user experience might be noticable in certain type of products! Since we are loading and processing assets that are slightly bigger in size, the webapp might
-  become slighly clunky and slow, obiviously this shouldn't affect the products where minor lack of smoothness can't be easily noticed.
+- The loss of user experience might be noticable in certain type of products!
+  Since we are loading and processing assets that are slightly bigger in size,
+  the webapp might become slighly clunky and slow, obiviously this shouldn't
+  affect the products where minor lack of smoothness can't be easily noticed.
 
-- You might encounter bugs that occur in builds generated in production mode but not in builds generated in dev mode and vice versa. This senario is extremely rare but not impossible.
+- You might encounter bugs that occur in builds generated in production mode but
+  not in builds generated in dev mode and vice versa. This senario is extremely
+  rare but not impossible.
 
 ## Downsides of this workflow!
 
-- Setting this up could be difficult depending on your project's architecture, for example, the project might read the server's URL from a .env file, so the url.
+- Setting this up could be difficult depending on your project's architecture,
+  for example, the project might read the server's URL from a .env file, so the
+  url.
 
-- Obiviously the workflow is a hack! If you fail to setup the workflow properly it might fail you when you are in a hurry.
-  It is very important to set this up properly and use it on a day to day basis - kind of battle test it, if you want
-  to ensure reliablity.
+- Obiviously the workflow is a hack! If you fail to setup the workflow properly
+  it might fail you when you are in a hurry. It is very important to set this up
+  properly and use it on a day to day basis - kind of battle test it, if you
+  want to ensure reliablity.
 
 ## The bottomline.

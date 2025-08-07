@@ -2,9 +2,21 @@
 title: 'Maintaining environments using hashing'
 date: '2024-07-04'
 lastmod: '2024-07-04'
-tags: ['devops', 'jenkins', 'pipeline', 'CI/CD', 'Github actions', 'deployment', 'microservices']
+tags:
+  [
+    'devops',
+    'jenkins',
+    'pipeline',
+    'CI/CD',
+    'Github actions',
+    'deployment',
+    'microservices',
+  ]
 draft: true
-summary: 'Release of Tailwind Nextjs Starter Blog template v2.0, refactored with Nextjs App directory and React Server Components setup.Discover the new features and how to migrate from V1.'
+summary:
+  'Release of Tailwind Nextjs Starter Blog template v2.0, refactored with Nextjs
+  App directory and React Server Components setup.Discover the new features and
+  how to migrate from V1.'
 images: ['/static/images/twitter-card.png']
 ---
 
@@ -16,31 +28,41 @@ While working in a software company
 
 # Efficient ways to keep your enviroment in sync with
 
-How do developers collaborate efficiently with non technical stake holders like designers, product managers, testers, etc.?
-Obviously the devs can't ask the non technical stakeholders to clone the repository into their machines, install relavent dependecies required to run
-the project, add your github remote into the cloned project, checkout the branch to which you pushed your commits and then run it... One way to address this issue is to maintain multiple environments...
+How do developers collaborate efficiently with non technical stake holders like
+designers, product managers, testers, etc.? Obviously the devs can't ask the non
+technical stakeholders to clone the repository into their machines, install
+relavent dependecies required to run the project, add your github remote into
+the cloned project, checkout the branch to which you pushed your commits and
+then run it... One way to address this issue is to maintain multiple
+environments...
 
-The devs can make changes to the codebase and deploy the project to any one of these environments, then ask the relavent stake holders
-to verify and approve the changes made...
+The devs can make changes to the codebase and deploy the project to any one of
+these environments, then ask the relavent stake holders to verify and approve
+the changes made...
 
 ## Problems with maintaining environments
 
 ### Long build duration
 
-Sometimes the changes done to the codebase might be super small, for example, the dev would have just change a small piece of text...
-Even though the changes that were done is very small the project needs to be built from scratch in the CI/CD pipeline... Obiviously there
-are multiple reliable ways to reduce the build duration, for example, using webpack cache, etc.
+Sometimes the changes done to the codebase might be super small, for example,
+the dev would have just change a small piece of text... Even though the changes
+that were done is very small the project needs to be built from scratch in the
+CI/CD pipeline... Obiviously there are multiple reliable ways to reduce the
+build duration, for example, using webpack cache, etc.
 
-Managing frontend SPA (Single Page Application) projects is super simple, you just have build the project in the pipeline and then move the `dist` generated
+Managing frontend SPA (Single Page Application) projects is super simple, you
+just have build the project in the pipeline and then move the `dist` generated
 to a storage bucket, and expose these folders to the internet...
 
-For example, assuming the build number to be 53 the url could be `rc53.my-dummy-org.com` and so on... So for every build triggered a folder will
+For example, assuming the build number to be 53 the url could be
+`rc53.my-dummy-org.com` and so on... So for every build triggered a folder will
 be created in a storage bucket and it would exposed as
 
-The problem with this approach is that n number of frontend projects would be pointing a single backend server...
+The problem with this approach is that n number of frontend projects would be
+pointing a single backend server...
 
-To improving the collaboration between the backend and the frontend folks we should let backend developers deploy their
-changes to different servers so that
+To improving the collaboration between the backend and the frontend folks we
+should let backend developers deploy their changes to different servers so that
 
 ## Microfronts?
 
