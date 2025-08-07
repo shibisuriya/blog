@@ -28,9 +28,42 @@ layout: PostLayout
 Dotfiles are hidden configuration files that are used to customize the behaviour
 of various programs in Unix-based operating systems like GNU/Linux and macOS.
 For example, the dotfile `.zshrc` (typically present in the user's home
-directory) can be used to customize the user's zsh shell.
+directory - `/Users/<your-username>/`) can be used to customize the user's zsh
+shell.
 
 # The problem with dotfiles
+
+## Owning multiple computers
+
+Let's say, recently at work your task involves making a lot of small changes to
+the codebase and pushing them to the remote repeatedly (think testing a CI by
+trail & error). After scambling through the clunky GUI of vscode to press the
+"Push commit" button after commiting each change you feel that you will highly
+benefit from adding a keyboard shortcut to push the commits to the remote. So
+you add the keyboard shortcut and it feels very ergonomic, within hours/days
+your mind/nervous system gets used to the keybinding & you start to take it for
+granted. When you hop on your personal computer after work hours or in the
+weekend you will badly missing this keybinding (trust me bro 😀)! You now have
+to manually copy all the keybindings & settings that you changed in your work
+computer to your personal computer typically by pressing buttons on a GUI (a
+Graphical User Interface).
+
+This might sound silly, but I think this small inconvenience of manually syncing
+the configurations between multiple computers makes using multiple computers
+impractical... You might start feeling that one of your computer is better or
+more ergonomic than others (even though it might not be true, its just
+"Familarity Bias") and you would end up spending most of your time on this "one"
+computer because you feel the most productive in it.
+
+Using multiple computers become very practical when you get the same experience
+across your computers with very little effort especially for power users.
+
+What if you were able to sync your settings & keybinding across computers using
+a single (obiviously familiar) command,
+
+```bash
+git pull origin main
+```
 
 ## New computers
 
@@ -38,26 +71,18 @@ Typically, we tend to customize the computer programs that we use on a regular
 basis to get our work done faster. Customizations might range from adding a few
 custom key biddings or changing the programs appearance.
 
-## Owning multiple computers
+What if we were.
 
-If you own multiple computers, customizations done to a program installed on a
-computer won't automatically propogate to other computers.
-
-For example, changing your office computer's Z shell's prompt won't change the
-prompt of the Z shell installed on your personal Desktop computer.
-
-Syncing the customizations across multiple devices is the user's
-responsibilty... The user has to manually compare the appropriate configuration
-files present in multiple computers, carefully merge the differences, copy the
-new version of the configuration files to all the devices and ensure that they
-work... This method of keep the configuration files in sync across multiple
-devices is time consuming, tedious and risky.
+What if we were able to install all the programs we need,
 
 ## Version control
 
-Suppose
+We must be able to track what changes we made to our dotfiles, when and for what
+purpose... This allows us to revert changes we didn't like, also we would be
+able to debug and fix issues confidently without second guessing what worked and
+what didn't.
 
-## In a quest for perfection!
+# In a quest for perfection!
 
 The way I manage my computers/dotfiles currently might not be perfect... I am
 aware that the tools and techniques that I currently use are not the absolute
@@ -70,6 +95,25 @@ as a personal reference. Feel free to
 [share suggestions](https://github.com/shibisuriya/.dotfiles/issues), or let
 [me](https://linkedin.com/in/shibisuriya) know if you’d like me to try
 something.
+
+# Ingredients
+
+- Git & Github (obiviously!)
+
+- [Nix (the package manager)](https://nixos.org/download)
+
+- [GNU Stow](https://www.gnu.org/software/stow/)
+
+- [Docker](https://www.docker.com/) (for testing/iterating your dotfiles)
+
+- [UTM](https://mac.getutm.app) (uses QEMU under the hood) or
+  [QEMU](https://www.qemu.org) (for testing/iterating your dotfiles)
+
+- [Ansible playbook](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html) (optional, have replaced it with Nix package manager now)
+
+- [Homebrew](https://brew.sh/) (currently using it with nix-darwin to download &
+  install some "non-free" software)
+
 
 ## macOS
 
@@ -88,7 +132,7 @@ nix-shell -p git --run "git clone --recurse-submodules https://github.com/shibis
 3. Install nix-darwin,
 
 ```bash
-nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#care_taker_1
+nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#shibi
 ```
 
 4. The `darwin-rebuild` command
@@ -97,7 +141,7 @@ Ones nix-darwin is installed, we will have access to the `darwin-rebuild`
 command,
 
 ```bash
-darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#care_taker_1
+darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#shibi
 ```
 
 5. Install TPM (Tmux plugin manager)
