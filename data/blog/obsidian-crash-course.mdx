@@ -1,0 +1,157 @@
+---
+title: 'Obsidian crash course'
+date: '2024-06-03'
+lastmod: '2024-06-03'
+tags: ['obsidian', 'note-taking', 'developer-productivity']
+draft: true
+summary: 'By configuring global gitignore and tweeking '
+images: ['/static/images/global-gitignore/note-taking.png']
+---
+
+## Wikilinks vs. Markdown links
+
+`[[ ]]` are called **Wikilinks**, while `[]()` are called **Markdown links**.
+
+## Why use Markdown links over Wikilinks?
+
+- I prefer markdown links because they are used in Github flavoured markdown &
+  MDX. So the links present in my notes will work in Obsidian, Github & my
+  personal blog (uses MDX) without modification.
+
+- Can be used with URLs as well. For example,`[Google](https://www.google.com)`.
+
+## Make Obsidian use Markdown links
+
+Obsidian uses Wikilinks out of the box but can be configured to use markdown
+links.
+
+![Enable markdown links in Obsidian](/static/images/blogs/obsidian-crash-course/enable-markdown-links.png)
+
+Even if Obsidian is configured to use markdown links, typing `[[]]` will only
+trigger suggestions, ones a suggestion is selected Obsidian will automatically
+convert it into a markdown link. This is counter-intuitive because typing `[]()`
+doesn't trigger suggestions (but typing `[[]]` does) even if Obsidian is
+configured to use markdown links.
+
+## Crash course
+
+### Links
+
+#### Add a link to a note
+
+- **Wikilinks**: `[[some-file|Link text]]`
+
+- **Markdown links**: `[Link text](some-file.md)`
+
+#### Add a link to a section of a note
+
+Typing `[[]]` will trigger suggestions, focus on a suggested note and type `#`,
+Obsidian will then suggest sections from the selected note, you can then focus
+on the required section and press `Enter`, Obsidian will create a link to the
+section of the note, clicking on this link will take you directly to the section
+of the note.
+
+- **Wikilinks**: `[[some-file#section|Link text]]`
+
+- **Markdown links**: `[Link text](some-file.md#section)`
+
+#### Add a link to an image,
+
+- **Wikilinks**: `[[some-image-file.png|My picture]]`
+
+- **Markdown links**: `[My picture](some-image-file.png)`
+
+Note: This adds a clickable link that opens the image in an Obsidian tab.
+
+### Embed
+
+#### To embed an image in a note,
+
+- **Wikilinks**: `![[Test.png]]`
+
+- **Markdown links**: `![Alt text](Test.png)`
+
+The preview of the image is only shown in Obsidian or markdown previewers not in
+text editors or web browsers (refer
+[Always edit/read your notes using Obsidian](#Always%20edit/read%20your%20notes%20using%20Obsidian.)).
+
+#### You can also embed a note inside another note (not recommended),
+
+- **Wikilinks**: `![[path of the note]]`
+
+- **Markdown links**: `![](path of the note)`
+
+Note: You can also embed Youtube videos using the syntax used above. It is fun
+to take notes while watching Youtube videos inside Obsidian itself without
+creating a split screen or switching between Obsidian and Google Chrome
+frequently!
+
+---
+
+## Always edit/read your notes using Obsidian
+
+To put it simply Obsidian is a text editor & markdown previewer...
+
+Obisidian uses markdown files and they can be edited using
+
+Markdown has some quirks, for example, line breaks doesn't create new
+paragraphs!
+
+```md
+Paragraph 1 Paragraph 2
+```
+
+Won't be converted to,
+
+```html
+<p>Paragraph 1</p>
+
+<p>Paragraph 2</p>
+```
+
+It will be converted to,
+
+```html
+<p>Paragraph 1 Paragraph 2</p>
+```
+
+Use two spaces or a backslash (`\`) at the end of the line,
+
+```markdown
+Para1 para2
+```
+
+Or
+
+```markdown
+Para1\
+para2
+```
+
+Converts to
+
+```html
+<p>Para1 <br />Para2</p>
+```
+
+Markdown was designed to both look clean and natural in
+
+Avoid using code editors to read/edit notes as much as possible, because you
+won't be able to preview the text alignment (refer
+[Use single line per 'task' & 'bullet point'](#Use%20single%20line%20per%20'task'%20&%20'bullet%20point')),
+images, youtube videos, Excalidraw drawings, embedded notes, etc. Use code
+editors to only work with Git.
+
+## Don't use code formatters
+
+Don't use code formatters like 'Prettier' to format .md files present in
+Obsidian vaults. There is nothing wrong with code formatters, they do their job
+well but in some cases Obsidian can't render formatted text property (refer
+[Use single line per 'task' & 'bullet point'](#Use%20single%20line%20per%20'task')
+). Manually format your files as you write them.
+
+## Use single line per 'task' & 'bullet point'
+
+Use single line per 'task' & 'bullet point', lengthy tasks & bullet points might
+look pretty & readable in code editors if written in multiple lines but Obsidian
+doesn't render them with proper indents.
