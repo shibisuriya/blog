@@ -128,85 +128,17 @@ something.
 - [Homebrew](https://brew.sh/) (currently using it with nix-darwin to download &
   install some "non-free" software)
 
-## macOS
+# A note to myself
 
-1. Install [nix](https://nixos.org/) for macOS, do a
-   [multi user installation](https://nixos.org/download/).
-
-2. Clone your dotfiles repo,
-
-My dotfiles repo is [public](https://github.com/shibisuriya/.dotfiles). If yours
-is private, you must first set up your Git credentials.
-
-```bash
-nix-shell -p git --run "git clone --recurse-submodules https://github.com/shibisuriya/.dotfiles ~/.dotfiles"
-```
-
-3. Install nix-darwin,
-
-```bash
-nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#shibi
-```
-
-4. The `darwin-rebuild` command
-
-Ones nix-darwin is installed, we will have access to the `darwin-rebuild`
-command,
-
-```bash
-darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#shibi
-```
-
-5. Install TPM (Tmux plugin manager)
-
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-
-Note: [This step needs to be automated](#in-a-quest-for-perfection)
-
-6. Symlink your dotfiles to appropriate locations on your machine using
-   [GNU Stow](https://www.gnu.org/software/stow/),
-
-```bash
-./stow.zsh # Uses GNU Stow under the hood.
-```
-
-I understand that 'nix home manager' can handle this more gracefully, but for
-now I am satisfied with GNU Stow.
-
-7. Update you git configuration (this step needs to be automated, I am
-   performing this step manually for now, because I don't want to store my
-   email, etc. in my public dotfiles repo).
-
-## Testing/Iterating
-
-### macOS
-
-1. Download and install [UTM](https://mac.getutm.app/), a simple and intuitive
-   app for creating and managing virtual machines on macOS; it is a wrapper
-   around [QEMU](https://www.qemu.org/).
-
-1. Create a macOS VM in UTM.
-   ![Create macOS vm in UTM](/static/images/managing-dotfiles/utm-1.png)
-
-1. Create a clone of the VM. Use the clone for testing/iterating... If something
-   goes wrong, you can delete the clone and create another one.
-   ![Clone vm in UTM](/static/images/managing-dotfiles/utm-2.png)
-
-1. Follow these [steps](#macos).
+This is a public repo, make sure to not commit and push sensitive information to
+it. Make sure to clean up the commit history if you accidentally pushed
+sensitive information to the remote.
 
 Treat this blog post as a gentle introduction to some advanced tools & technics
 that are available to manage dotfiles.
 
 If you are new to managing dotfiles, treat this blog post as a highlevel
 overview of all the mordern tools & technics that are available.
-
-# A note to myself
-
-This is a public repo, make sure to not commit and push sensitive information to
-it. Make sure to clean up the commit history if you accidentally pushed
-sensitive information to the remote.
 
 ## Setups
 
