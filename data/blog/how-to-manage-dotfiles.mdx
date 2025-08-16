@@ -1,10 +1,9 @@
 ---
-title: 'Tutorial: How to manage dotfiles'
+title: 'How to manage dotfiles'
 date: '2024-06-03'
 lastmod: '2024-06-03'
 tags:
   [
-    'tutorial',
     'dotfiles',
     'distro-hopping',
     'developer-productivity',
@@ -24,280 +23,40 @@ images: ['/static/images/managing-dotfiles/dotfiles-banner.webp']
 layout: PostLayout
 ---
 
-# What are dotfiles?
+# Dotfiles repo
 
-Dotfiles are hidden files that are used to configure the behaviour of programs
-in Unix-based operating systems like GNU/Linux or macOS. For example, the
-dotfile `.zshrc` (typically present in the user's home directory -
-`/Users/<username>/`) can be used to configure the user's zsh shell.
+Create a directory (name it `.dotfiles`) and move all of your dotfiles into it.
 
-# The problem with dotfiles
-
-## Owning multiple computers
-
-Let's say, recently at work your task involves frequently making small changes
-to the codebase and then pushing them to the remote (think testing a CI by trail
-& error). After scambling through the clunky GUI of vscode to press the "Push
-commit" button often, you feel that you will highly benefit from adding a
-keyboard shortcut to push the commits to the remote. So you add the keyboard
-shortcut and it feels very ergonomic, within hours/days your mind/nervous system
-gets used to the keybinding & you start to take it for granted. When you hop
-onto your personal computer after work hours or in the weekend you will badly
-miss this keybinding (trust me bro 😀)! You now have to manually copy all the
-keybindings & settings that you changed in your work computer to your personal
-computer typically by pressing buttons on a GUI (Graphical User Interface).
-
-This might sound silly, but I think this small inconvenience of manually syncing
-the configurations between multiple computers makes using multiple computers
-impractical... You might start feeling that one of your computer is better or
-more ergonomic than others (even though it might not be true, its just
-"Familarity Bias") and you would end up spending most of your time on this "one"
-computer because you feel the most productive in it.
-
-Using multiple computers become very practical when you get the same experience
-across your computers with very small effort.
-
-What if you were able to sync your settings & keybinding across computers using
-a single (obiviously familiar) command,
+For example, let's move vscode's settings into it,
 
 ```bash
-git pull origin main
+mv "~/Library/Application Support/Code/User/settings.json" ~/.dotfiles/vscode/settings.json # macOS
 ```
 
-Virtual machines & Docker containers can also be considered "computers", if you
-are someone who spends a lot of time in virtual machines or docker containers,
-consistent experience (think system settings, installed programs, custom
-keybindings, appearance, etc.) across your hosts, virtual machines & containers
-could be extremely valuable.
-
-## New computers (also think virtual machines & Docker containers)
-
-Typically, most computer users tend to configure their computers for better
-ergonomics or higher productivity - to finish their work faster. Configurations
-might range from switching on the Dark theme, installing/uninstalling programs,
-modifying/adding keybindings, tweaking performance, changing a program's
-appearance, etc.
-
-Letting go of a computer and setting up everything from scratch on a new
-computer could be daunting especially for users who would have invested a lot of
-time & energy configuring their computer the way they like.
-
-People who work with virtual machines or Docker containers a lot might even
-change their "computers" in hours or days! Setting up new "computers" frequently
-by clicking buttons in a GUI or by typing/pasting tons of commands in a shell is
-not practical. Obiviously, tools like `docker build`, Ansible playbook, etc.
-help us solve this problem (we will be discussing tools like these in-depth in
-this blog post).
-
-## Version control
-
-We must be able to track what changes we made to our dotfiles, when and for what
-purpose... This allows us to revert changes we didn't like, also we would be
-able to debug and fix issues confidently without second guessing what worked and
-what didn't.
-
-# How to approach/use this blog post
-
-The way I manage my dotfiles is opinionated, for example I prefer to use normal
-git repo & symlink dotfiles to their locations instead of using a "bare git
-repository"... I am aware that there are multiple ways to accompolish the same
-objectives in software engineering... So use this blog post as a gentle
-introduction to some neat tools & technics that are available to manage
-dotfiles.
-
-Note: The way I manage my computers/dotfiles currently might not be perfect... I
-am aware that the tools and techniques that I currently use are not the absolute
-best, and there are better alternatives. My current setup works for me, even if
-it is imperfect. I am an eternal learner, I will try hard to keep this blog post
-updated or rewrite it if required as I explore and adopt new tools and
-techniques since this blog post also serves as a README for my publically
-maintained [dotfiles](https://github.com/shibisuriya/.dotfiles) repository and
-as a personal reference. Feel free to
-[share suggestions](https://github.com/shibisuriya/.dotfiles/issues), or let
-[me](https://linkedin.com/in/shibisuriya) know if you’d like me to try
-something.
-
-# Ingredients
-
-- Git & Github
-
-- [Nix (the package manager)](https://nixos.org/download)
-
-- [GNU Stow](https://www.gnu.org/software/stow/)
-
-- [Docker](https://www.docker.com/) (for testing/iterating your dotfiles)
-
-- [UTM](https://mac.getutm.app) (uses QEMU under the hood) or
-  [QEMU](https://www.qemu.org) (for testing/iterating your dotfiles)
-
-- [Ansible playbook](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
-  (optional, I have replaced it with Nix package manager in my setup)
-
-- [Homebrew](https://brew.sh/) (currently using it with nix-darwin to download &
-  install some "non-free" software)
-
-## Setups
-
-### macOS
-
-1. [Install nix (the package manager) for macOS](https://nixos.org/download/),
-   do a multi user installation.
-
-2. Clone the dotfiles repo,
+Initialize a git repo in the directory.
 
 ```bash
-nix-shell -p git --run "git clone --recurse-submodules https://github.com/shibisuriya/.dotfiles ~/.dotfiles"
+git init
 ```
 
-3. Install nix-darwin
+We will symlink the `settings.json` back to
+`~/Library/Application Support/Code/User/` using a neat tool named GNU stow.
 
-```bash
-nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#shibi
-```
+# Warning
 
-Note: `nix-darwin` in the above command refers to a flake input.
+If you have decided to maintain your dotfiles publically make sure to not commit
+and push sensitive information (could include, personal email addresses, JWT
+tokens, passwords, etc.) to the remote! If you have pushed sensitive information
+to the remote accidentally, make sure to clean up the commit history.
 
-Ones run, we will have access to the `darwin-rebuild` command.
+# Don't stray away from the defaults (advice)
 
-```bash
-darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#shibi
-```
+Only use a handful of tools, also we must develop the habit of using a software
+product the way the developer of the product intended it to be used & not
+customize it too much, memorize the default keybindings (only the essential ones
+not all), study the default behaviours and do not try to make things look
+"pretty" (rabbit hole that has no end)! Do not waste time
+[ricing](https://www.reddit.com/r/unixporn/comments/3iy3wd/stupid_question_what_is_ricing/)!
+Keep things dead simple.
 
-4. Install 'Apple Command Line Tools (CLT)'
-
-Neovim Mason uses Apple CLT to build some language servers that I use from
-source code.
-
-You can skip this step if your setup doesn't depend on CLT.
-
-```bash
-xcode-select install
-```
-
-CLT is a subset of Xcode, the command above will not install complete Xcode.
-
-Note: This step can't be automated using nix and must be performed manually.
-
-5. Install TPM - Tmux Package Manager,
-
-```bash
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-```
-
-Note: This step can be automated using nix.
-
-6. Symlink the dotfiles to their target locations using GNU Stow,
-
-```bash
-cd ~/.dotfiles
-./stow.zsh # A shell script, uses GNU Stow under the hood.
-```
-
-Instead of using GNU stow to symlink the dotfiles to their target locations we
-can use ['nix home-manager'](https://github.com/nix-community/home-manager),
-
-My setup is weird! I use nix to manage my computer's system settings and
-software packages, git to version control my dotfiles and GNU stow to symlink
-them their target locations.
-
-I understand that 'nix home manager' can handle this more gracefully, but for
-now I am satisfied with Stow.
-
-7. Update the `.gitconfig` file (this step needs to be automated, I am
-   performing this step manually for now because I don't want to store my email,
-   full name, etc. in the .gitconfig file publically).
-
-8. Manually install non-free software like Chrome, Obsidian, Docker desktop,
-   etc. You can maintain a list of non-free software that you need in your
-   dotfiles repo's README file so that you can refer it while setting up a new
-   computer.
-
-### Formatting .nix files
-
-Code formatters to format .nix files such as 'alejandra', 'nixfmt', etc. for
-Neovim are not supported in Apple Silicon, use the `nix fmt` command instead,
-
-```bash
-cd ~/.dotfiles/nix-darwin
-nix fmt
-```
-
-## Testing my setups
-
-For testing/iterating purposes I don't install my dotfiles on my host computer.
-The obivious reason for this is, I already have my dotfiles installed on my
-host, I don't want to reinstall it - I want a computer with 'fresh install'!
-Also I don't want to put my host into an incomplete state with partially
-installed applications, unnecessary files & directories created, etc. (if the
-installation process fails for some reason, happens often while making changes
-to the dotfiles), obiviously nix allows me to prevent this, nix builds are
-'atomic' either they succeeds completely or nothing changes but I prefer to test
-my dotfiles files in an isolated environment, either on a computer having a
-'fresh install' or in virtual environments.
-
-### macOS (using UTM)
-
-1. Download and install [UTM](https://mac.getutm.app/), a simple and intuitive
-   app for creating and managing virtual machines on macOS; it is a wrapper
-   around [QEMU](https://www.qemu.org/).
-
-1. Create a macOS VM in UTM.
-   ![Create macOS vm in UTM](/static/images/managing-dotfiles/utm-1.png)
-
-1. Create a clone of the VM. Use the clone for testing/iterating... If something
-   goes wrong, you can delete the clone and create another one.
-   ![Clone vm in UTM](/static/images/managing-dotfiles/utm-2.png)
-
-1. Follow these [steps](#macos).
-
-You can iterate and test your dotfiles without worry about leaving your host in
-an undesirable state if something fails or breaks.
-
-### Using Docker
-
-I build a Ubuntu based docker image to verify if my dotfiles install flawlessly,
-if the docker build fails for some reason then my dotfiles have issues, I can
-immediately correct them and rebuild without worrying about my host computer
-getting put into incomplete states. This allows me to test and iterate faster, I
-don't want a computer with 'fresh install' which take some time to provision!
-
-You can build a Ubuntu based docker image which has most of the programs you
-need preinstalled and configured using your dotfiles.
-
-To build the docker image,
-
-```bash
-docker build --target prod -t dotfiles .
-```
-
-You can then create a container using this image and copy or volume mount
-directories/files from your host. This is extremely useful for
-tinkering/testing/learning new things without worrying about random programs
-modifying your host’s settings.
-
-```bash
-docker run -it --rm -v .:/root/directory_1 dotfiles
-```
-
-Currently I am using ansible playbook to install and configure the programs that
-I need in the Docker container... I am planning to replace ansible with nix...
-In any cases, you might want to debug/change the build process...
-
-To create a Ubuntu based docker image that has Ansible and Nix preinstalled,
-
-```bash
-docker build --target dev -t dotfiles:dev .
-```
-
-Spin up a container based on this image and volume mount/copy your dotfiles into
-it.
-
-```bash
-docker run -it --rm -v .:/root/.dotfiles dotfiles:dev
-```
-
-Run the ansible playbook,
-
-```bash
-ansible-playbook /root/.dotfiles/local.yml
-```
+![Arch linux IQ curve meme](/static/images/blogs/how-to-manage-dotfiles/arch-linux-meme.webp)
