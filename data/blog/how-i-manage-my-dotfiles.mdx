@@ -101,8 +101,11 @@ cd ~/.dotfiles
    full name, etc. in the .gitconfig file publically).
 
 8. I manually install non-free software like Chrome, Obsidian, Docker desktop,
-   etc. I maintain a list of non-free software that I need in this blog post so
-   that I can refer it while setting up a new computer.
+   etc. I maintain a list of [non-free software](#non-free-software-i-need) that
+   I need in this blog post so that I can refer it while setting up a new
+   computer.
+
+9. I install [`homebrew`](https://brew.sh/) (I use it to install some programs).
 
 ## Formatting .nix files
 
@@ -114,38 +117,39 @@ cd ~/.dotfiles/nix-darwin
 nix fmt
 ```
 
-# Testing my setups
+# Testing & improving the installation process
 
-For testing/iterating purposes I don't install my dotfiles on my host computer.
-The obivious reason for this is, I already have my dotfiles installed on my
-host, I don't want to reinstall it - I want a computer with 'fresh install'!
-Also I don't want to put my host into an incomplete state with partially
-installed applications, unnecessary files & directories created, etc. (if the
-installation process fails for some reason, happens often while making changes
-to the dotfiles), obiviously nix allows me to prevent this, nix builds are
-"atomic" either they succeeds completely or nothing changes but I prefer to test
-my dotfiles files in an isolated environment, either on a computer having a
-'fresh install' or in virtual environments.
+Testing & improving the installation process of the dotfiles on the host itself
+is not a good idea!
 
-### For macOS (using UTM)
+1. Dotfiles might have already been installed on the host.
 
-1. Download and install [UTM](https://mac.getutm.app/), a simple and intuitive
-   app for creating and managing virtual machines on macOS; it is a wrapper
-   around [QEMU](https://www.qemu.org/).
+1. The host will be left in an undesirable state (partially installed
+   applications, dotfiles that are not symlinked yet, etc.) if the installation
+   process fails for some reason.
 
-1. Create a macOS VM in UTM.
-   ![Create macOS vm in UTM](/static/images/managing-dotfiles/utm-1.png)
+I prefer to test the installation process inside a Docker container or virtual
+machine (preferably "fresh installs"), I can experiment carelessly without
+worrying about my host getting wrecked if something goes wrong.
 
-1. Create a clone of the VM. Use the clone for testing/iterating... If something
-   goes wrong, you can delete the clone and create another one.
-   ![Clone vm in UTM](/static/images/managing-dotfiles/utm-2.png)
+## macOS (using UTM)
 
-1. Follow these [steps](#macos).
+1. Download and install [UTM](https://mac.getutm.app/), a super simple app for
+   creating and managing virtual machines on macOS; it is a wrapper around
+   [QEMU](https://www.qemu.org/).
 
-You can iterate and test your dotfiles without worry about leaving your host in
-an undesirable state if something fails or breaks.
+1. Create a macOS VM in UTM & set it up (create users, select time zone,
+   language, keyboard layout, etc.). Do not use this VM, instead create a clone
+   of this VM for testing & improving the installation process. If something
+   fails, delete the clone VM & create another clone... This way you can start
+   testing the installation process as soon as the VM boots up instead of
+   creating users, selecting time zones, etc. again & again.
 
-### Ubuntu / Docker image
+1. Execute these [steps](#macos) inside the VM.
+
+1. Fix if something fails & repeat the steps inside a new VM.
+
+## Ubuntu (using Docker container)
 
 I build a Ubuntu based docker image to verify if my dotfiles install flawlessly,
 if the docker build fails for some reason then my dotfiles have issues, I can
