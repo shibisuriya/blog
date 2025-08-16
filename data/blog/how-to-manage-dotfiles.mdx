@@ -1,9 +1,10 @@
 ---
-title: 'How to manage dotfiles like a pro!'
+title: 'Tutorial: How to manage dotfiles'
 date: '2024-06-03'
 lastmod: '2024-06-03'
 tags:
   [
+    'tutorial',
     'dotfiles',
     'distro-hopping',
     'developer-productivity',
@@ -95,10 +96,17 @@ purpose... This allows us to revert changes we didn't like, also we would be
 able to debug and fix issues confidently without second guessing what worked and
 what didn't.
 
-# In a quest for perfection!
+# How to approach/use this blog post
 
-The way I manage my computers/dotfiles currently might not be perfect... I am
-aware that the tools and techniques that I currently use are not the absolute
+The way I manage my dotfiles is opinionated, for example I prefer to use normal
+git repo & symlink dotfiles to their locations instead of using a "bare git
+repository"... I am aware that there are multiple ways to accompolish the same
+objectives in software engineering... So use this blog post as a gentle
+introduction to some neat tools & technics that are available to manage
+dotfiles.
+
+Note: The way I manage my computers/dotfiles currently might not be perfect... I
+am aware that the tools and techniques that I currently use are not the absolute
 best, and there are better alternatives. My current setup works for me, even if
 it is imperfect. I am an eternal learner, I will try hard to keep this blog post
 updated or rewrite it if required as I explore and adopt new tools and
@@ -111,7 +119,7 @@ something.
 
 # Ingredients
 
-- Git & Github (obiviously!)
+- Git & Github
 
 - [Nix (the package manager)](https://nixos.org/download)
 
@@ -128,28 +136,12 @@ something.
 - [Homebrew](https://brew.sh/) (currently using it with nix-darwin to download &
   install some "non-free" software)
 
-# A note to myself
-
-This is a public repo, make sure to not commit and push sensitive information to
-it. Make sure to clean up the commit history if you accidentally pushed
-sensitive information to the remote.
-
-Treat this blog post as a gentle introduction to some advanced tools & technics
-that are available to manage dotfiles.
-
-If you are new to managing dotfiles, treat this blog post as a highlevel
-overview of all the mordern tools & technics that are available.
-
 ## Setups
-
-As mentioned earlier, this blog also serves as a README.md file for my dotfiles
-repo, I use the instructions written below when setting up a new computer. Skip
-the steps that are irrelavant for your setup.
 
 ### macOS
 
-1. [Install nix for macOS](https://nixos.org/download/), do a multi user
-   installation.
+1. [Install nix (the package manager) for macOS](https://nixos.org/download/),
+   do a multi user installation.
 
 2. Clone the dotfiles repo,
 
@@ -215,19 +207,20 @@ now I am satisfied with Stow.
    performing this step manually for now because I don't want to store my email,
    full name, etc. in the .gitconfig file publically).
 
-8. Manually install non-free software like Chrome, Obsidian, Docker desktop etc.
+8. Manually install non-free software like Chrome, Obsidian, Docker desktop,
+   etc. You can maintain a list of non-free software that you need in your
+   dotfiles repo's README file so that you can refer it while setting up a new
+   computer.
 
-# Don't stray away from the defaults (advice)
+### Formatting .nix files
 
-Only use a handful of tools, also we must develop the habit of using a software
-product the way the developer of the product intended it to be used & not
-customize it too much, memorize the default keybindings (only the essential ones
-not all), study the default behaviours and do not try to make things look
-"pretty" (rabbit hole that has no end)! Do not waste time
-[ricing](https://www.reddit.com/r/unixporn/comments/3iy3wd/stupid_question_what_is_ricing/)!
-Keep things dead simple.
+Code formatters to format .nix files such as 'alejandra', 'nixfmt', etc. for
+Neovim are not supported in Apple Silicon, use the `nix fmt` command instead,
 
-![Arch linux IQ curve meme](/static/images/blogs/how-to-manage-dotfiles/arch-linux-meme.webp)
+```bash
+cd ~/.dotfiles/nix-darwin
+nix fmt
+```
 
 ## Testing my setups
 
@@ -241,6 +234,24 @@ to the dotfiles), obiviously nix allows me to prevent this, nix builds are
 'atomic' either they succeeds completely or nothing changes but I prefer to test
 my dotfiles files in an isolated environment, either on a computer having a
 'fresh install' or in virtual environments.
+
+### macOS (using UTM)
+
+1. Download and install [UTM](https://mac.getutm.app/), a simple and intuitive
+   app for creating and managing virtual machines on macOS; it is a wrapper
+   around [QEMU](https://www.qemu.org/).
+
+1. Create a macOS VM in UTM.
+   ![Create macOS vm in UTM](/static/images/managing-dotfiles/utm-1.png)
+
+1. Create a clone of the VM. Use the clone for testing/iterating... If something
+   goes wrong, you can delete the clone and create another one.
+   ![Clone vm in UTM](/static/images/managing-dotfiles/utm-2.png)
+
+1. Follow these [steps](#macos).
+
+You can iterate and test your dotfiles without worry about leaving your host in
+an undesirable state if something fails or breaks.
 
 ### Using Docker
 
@@ -289,16 +300,4 @@ Run the ansible playbook,
 
 ```bash
 ansible-playbook /root/.dotfiles/local.yml
-```
-
-## Formatting .nix files
-
-Code formatters to format .nix files such as 'alejandra', 'nixfmt', etc. for
-Neovim are not supported in Apple Silicon.
-
-.nix files can be formatted using the 'nix fmt' command,
-
-```bash
-cd ~/.dotfiles/nix-darwin
-nix fmt
 ```
