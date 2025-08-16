@@ -1,5 +1,5 @@
 ---
-title: 'I explain my dotfiles'
+title: 'I explain my dotfiles setup'
 date: '2024-06-03'
 lastmod: '2024-06-03'
 tags:
@@ -24,41 +24,35 @@ images: ['/static/images/managing-dotfiles/dotfiles-banner.webp']
 layout: PostLayout
 ---
 
-# How to approach/use this blog post
+I will be explaining my dotfiles setup in this blog post, if you are someone who
+doesn't know what dotfiles are, why would you want to manage them, etc. read my
+simple tutorial on ['how to manage dotfiles'](/blog/how-to-manage-dotfiles).
 
-The way I manage my dotfiles is opinionated, for example I prefer to use normal
-git repo & symlink dotfiles to their locations instead of using a "bare git
-repository"... I am aware that there are multiple ways to accompolish the same
-objectives in software engineering... So use this blog post as a gentle
-introduction to some neat tools & technics that are available to manage
-dotfiles.
+I own two computers, a PC that has Ubuntu and Windows 11 installed (dual boot)
+and a M1 Macbook pro that I use for office work. I am a software engineer by
+profession, my work mostly revolves around backend systems, databases,
+infrastructure, virtual machine, Docker containers, etc. I prefer Ubuntu or
+macOS for software development & only boot into windows for play computer games,
+I haven't ported my dotfiles to windows for this reason. My dotfiles work fine
+in Ubuntu & macOS.
 
-Note: The way I manage my computers/dotfiles currently might not be perfect... I
-am aware that the tools and techniques that I currently use are not the absolute
-best, and there are better alternatives. My current setup works for me, even if
-it is imperfect. I am an eternal learner, I will try hard to keep this blog post
-updated or rewrite it if required as I explore and adopt new tools and
-techniques since this blog post also serves as a README for my publically
-maintained [dotfiles](https://github.com/shibisuriya/.dotfiles) repository and
-as a personal reference. Feel free to
-[share suggestions](https://github.com/shibisuriya/.dotfiles/issues), or let
-[me](https://linkedin.com/in/shibisuriya) know if you’d like me to try
-something.
+This blog post also serves as a README for my publically maintained
+[dotfiles repo](https://github.com/shibisuriya/.dotfiles), this is intentional
+because it forces me to keep this blog post neat & updated so that I can
+reference it while setting up a new computer.
 
-## Setups
+# macOS
 
-### macOS
+1. I install [nix (the package manager) for macOS](https://nixos.org/download/),
+   I do a multi user installation.
 
-1. [Install nix (the package manager) for macOS](https://nixos.org/download/),
-   do a multi user installation.
-
-2. Clone the dotfiles repo,
+2. I clone my dotfiles repo,
 
 ```bash
 nix-shell -p git --run "git clone --recurse-submodules https://github.com/shibisuriya/.dotfiles ~/.dotfiles"
 ```
 
-3. Install nix-darwin
+3. I Install nix-darwin
 
 ```bash
 nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#shibi
@@ -66,7 +60,7 @@ nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch 
 
 Note: `nix-darwin` in the above command refers to a flake input.
 
-Ones run, we will have access to the `darwin-rebuild` command.
+Ones run, I will have access to the `darwin-rebuild` command.
 
 ```bash
 darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#shibi
@@ -76,8 +70,6 @@ darwin-rebuild switch --flake ~/.dotfiles/nix-darwin#shibi
 
 Neovim Mason uses Apple CLT to build some language servers that I use from
 source code.
-
-You can skip this step if your setup doesn't depend on CLT.
 
 ```bash
 xcode-select install
@@ -93,7 +85,7 @@ Note: This step can't be automated using nix and must be performed manually.
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
 
-Note: This step can be automated using nix.
+Note: This step can be automated using nix but I haven't automated it yet.
 
 6. Symlink the dotfiles to their target locations using GNU Stow,
 
@@ -102,26 +94,15 @@ cd ~/.dotfiles
 ./stow.zsh # A shell script, uses GNU Stow under the hood.
 ```
 
-Instead of using GNU stow to symlink the dotfiles to their target locations we
-can use ['nix home-manager'](https://github.com/nix-community/home-manager),
-
-My setup is weird! I use nix to manage my computer's system settings and
-software packages, git to version control my dotfiles and GNU stow to symlink
-them their target locations.
-
-I understand that 'nix home manager' can handle this more gracefully, but for
-now I am satisfied with Stow.
-
 7. Update the `.gitconfig` file (this step needs to be automated, I am
    performing this step manually for now because I don't want to store my email,
    full name, etc. in the .gitconfig file publically).
 
-8. Manually install non-free software like Chrome, Obsidian, Docker desktop,
-   etc. You can maintain a list of non-free software that you need in your
-   dotfiles repo's README file so that you can refer it while setting up a new
-   computer.
+8. I manually install non-free software like Chrome, Obsidian, Docker desktop,
+   etc. I maintain a list of non-free software that I need in this blog post so
+   that I can refer it while setting up a new computer.
 
-### Formatting .nix files
+## Formatting .nix files
 
 Code formatters to format .nix files such as 'alejandra', 'nixfmt', etc. for
 Neovim are not supported in Apple Silicon, use the `nix fmt` command instead,
@@ -131,7 +112,7 @@ cd ~/.dotfiles/nix-darwin
 nix fmt
 ```
 
-## Testing my setups
+# Testing my setups
 
 For testing/iterating purposes I don't install my dotfiles on my host computer.
 The obivious reason for this is, I already have my dotfiles installed on my
@@ -140,11 +121,11 @@ Also I don't want to put my host into an incomplete state with partially
 installed applications, unnecessary files & directories created, etc. (if the
 installation process fails for some reason, happens often while making changes
 to the dotfiles), obiviously nix allows me to prevent this, nix builds are
-'atomic' either they succeeds completely or nothing changes but I prefer to test
+"atomic" either they succeeds completely or nothing changes but I prefer to test
 my dotfiles files in an isolated environment, either on a computer having a
 'fresh install' or in virtual environments.
 
-### macOS (using UTM)
+### For macOS (using UTM)
 
 1. Download and install [UTM](https://mac.getutm.app/), a simple and intuitive
    app for creating and managing virtual machines on macOS; it is a wrapper
@@ -162,7 +143,7 @@ my dotfiles files in an isolated environment, either on a computer having a
 You can iterate and test your dotfiles without worry about leaving your host in
 an undesirable state if something fails or breaks.
 
-### Using Docker
+### Ubuntu / Docker image
 
 I build a Ubuntu based docker image to verify if my dotfiles install flawlessly,
 if the docker build fails for some reason then my dotfiles have issues, I can
@@ -210,3 +191,23 @@ Run the ansible playbook,
 ```bash
 ansible-playbook /root/.dotfiles/local.yml
 ```
+
+# Non-free software I need
+
+- Chrome
+- Obsidian
+- Docker desktop
+
+# Eternal learner/explorer
+
+The way I manage my dotfiles currently might not be perfect... I am aware that
+the tools and techniques that I currently use are not the absolute best, and
+there are better alternatives. My current setup works for me, even if it is
+imperfect. I am an eternal learner, I will try hard to keep this blog post
+updated or rewrite it if required as I explore and adopt new tools and
+techniques since this blog post also serves as a README for my publically
+maintained [dotfiles](https://github.com/shibisuriya/.dotfiles) repository and
+as a personal reference. Feel free to
+[share suggestions](https://github.com/shibisuriya/.dotfiles/issues), or let
+[me](https://linkedin.com/in/shibisuriya) know if you’d want me to try
+something. Thanks for reading my blog post.
