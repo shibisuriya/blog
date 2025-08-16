@@ -1,5 +1,5 @@
 ---
-title: 'I explain my dotfiles setup'
+title: 'How I manage my dotfiles?'
 date: '2024-06-03'
 lastmod: '2024-06-03'
 tags:
@@ -12,6 +12,7 @@ tags:
     'unix',
     'linux',
     'gnu-stow',
+    'nix',
     'neovim',
     'ansible-playbook',
     'lab',
@@ -20,14 +21,14 @@ tags:
 draft: false
 summary:
   'I explain how I manage my dotfiles using neat tools like nix package manager,
-  Docker, Ansible playbook, etc.'
+  Docker, Ansible playbook, GNU Stow, etc.'
 images: ['/static/images/blogs/i-explain-my-dotfiles-setup/tux-propose.svg']
 layout: PostLayout
 ---
 
 I will be explaining my dotfiles setup in this blog post, if you are someone who
-doesn't know what dotfiles are, why would you want to manage them, etc. read my
-simple tutorial on ['how to manage dotfiles'](/blog/how-to-manage-dotfiles).
+doesn't know what dotfiles are, why would you want to manage them?, etc. read my
+[simple tutorial on managing dotfiles](/blog/how-to-manage-dotfiles).
 
 I own two computers, a PC that has Ubuntu and Windows 11 installed (dual boot)
 and a M1 Macbook pro that I use for office work. I am a software engineer by
@@ -53,7 +54,7 @@ reference it while setting up a new computer.
 nix-shell -p git --run "git clone --recurse-submodules https://github.com/shibisuriya/.dotfiles ~/.dotfiles"
 ```
 
-3. I Install nix-darwin
+3. I Install `nix-darwin`
 
 ```bash
 nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake ~/.dotfiles/nix-darwin#shibi
