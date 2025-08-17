@@ -10,7 +10,7 @@ summary: 'By configuring global gitignore and tweeking '
 images: ['/static/images/global-gitignore/note-taking.png']
 ---
 
-![Note taking](/static/images/global-gitignore/note-taking.png)
+![Note taking](/static/images/blogs/global-gitignore/note-taking.jpg)
 
 ## But why would we want to store notes and todos related to a software project within its git repo?
 
@@ -50,6 +50,9 @@ file to ensure Git uses the global ignore file:
 [core]
     excludesfile = ~/.gitignore_global
 ```
+
+Refer my
+[dotfiles repo](https://github.com/shibisuriya/.dotfiles/tree/main/git).
 
 ## Code editors ignoring files ignored by git
 
@@ -97,7 +100,7 @@ add the following lines of code in, either
 }
 ```
 
-![Hello](/static/images/global-gitignore/result1.png)
+![Hello](/static/images/blogs/global-gitignore/vscode-search.png)
 
 ### Neovim
 
@@ -111,7 +114,7 @@ named `.rgignore` in the user's home directory and add the line to it.
 !**/temp-notes
 ```
 
-![.rgignore](/static/images/global-gitignore/nvim-rgignore.png)
+![.rgignore](/static/images/blogs/global-gitignore/telescope-ripgrep-neovim.png)
 
 Likewise, most popular code editors can be configured to search for files and
 text within a directory that git is set to ignore.
