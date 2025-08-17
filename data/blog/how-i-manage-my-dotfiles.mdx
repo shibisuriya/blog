@@ -17,6 +17,7 @@ tags:
     'ansible-playbook',
     'lab',
     'devops',
+    'ops',
   ]
 draft: false
 summary:
@@ -40,8 +41,8 @@ in Ubuntu & macOS.
 
 This blog post also serves as a README for my publically maintained
 [dotfiles repo](https://github.com/shibisuriya/.dotfiles), this is intentional
-because it forces me to keep this blog post neat & updated so that I can
-reference it while setting up a new computer.
+because it forces me to keep this blog post neat & updated so that I can refer
+it while setting up a new computer.
 
 # macOS
 
@@ -128,9 +129,8 @@ is not a good idea!
    applications, dotfiles that are not symlinked yet, etc.) if the installation
    process fails for some reason.
 
-I prefer to test the installation process inside a Docker container or virtual
-machine (preferably "fresh installs"), I can experiment carelessly without
-worrying about my host getting wrecked if something goes wrong.
+For these reasons I prefer to test the installation process inside a Docker
+container or virtual machine (preferably "fresh installs").
 
 ## macOS (using UTM)
 
@@ -151,33 +151,14 @@ worrying about my host getting wrecked if something goes wrong.
 
 ## Ubuntu (using Docker container)
 
-I build a Ubuntu based docker image to verify if my dotfiles install flawlessly,
-if the docker build fails for some reason then my dotfiles have issues, I can
-immediately correct them and rebuild without worrying about my host computer
-getting put into incomplete states. This allows me to test and iterate faster, I
-don't want a computer with 'fresh install' which take some time to provision!
+I prefer Docker containers for testing the installation process of my dotfiles
+in Ubuntu because they are light weight (compared to QEMU VMs) and boot up
+quickly.
 
-You can build a Ubuntu based docker image which has most of the programs you
-need preinstalled and configured using your dotfiles.
+Currently I am using Ansible playbook to install programs in Ubuntu, I will
+migrate to nix package manager in the future.
 
-To build the docker image,
-
-```bash
-docker build --target prod -t dotfiles .
-```
-
-You can then create a container using this image and copy or volume mount
-directories/files from your host. This is extremely useful for
-tinkering/testing/learning new things without worrying about random programs
-modifying your host’s settings.
-
-```bash
-docker run -it --rm -v .:/root/directory_1 dotfiles
-```
-
-Currently I am using ansible playbook to install and configure the programs that
-I need in the Docker container... I am planning to replace ansible with nix...
-In any cases, you might want to debug/change the build process...
+### Dev containers (for testing & improving the installation process)
 
 To create a Ubuntu based docker image that has Ansible and Nix preinstalled,
 
@@ -197,6 +178,32 @@ Run the ansible playbook,
 ```bash
 ansible-playbook /root/.dotfiles/local.yml
 ```
+
+### Prod containers (sandbox)
+
+To build a Ubuntu based Docker image that has most of the programs I need & my
+dotfiles installed,
+
+```bash
+docker build --target prod -t dotfiles .
+```
+
+Since this image has my dotfiles installed & all of the programs I absolutely
+need, I use it as a sandbox to tinker/test/install/learn new things without
+worrying about mistakes that can affect my host.
+
+I can quickly spin up a container of this image and copy or volume mount
+directories/files from the host,
+
+```bash
+docker run -it --rm -v .:/root/directory_1 dotfiles
+```
+
+I can even publish this image to Docker Hub so that I can pull and run a
+container based on it on any machine having Docker runtime, for example I can
+spin up a container on my coworker's machine for quickly debugging something, I
+don't have to install anything on their machine or modify their settings, the
+image has most of things that I need for development work.
 
 # Non-free software I need
 
