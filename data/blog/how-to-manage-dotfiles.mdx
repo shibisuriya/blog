@@ -27,26 +27,35 @@ layout: PostLayout
 
 # What are dotfiles?
 
-Dotfiles are hidden files that are used to configure the behaviour of programs
-in Unix-based operating systems like GNU/Linux or macOS. For example, the
-dotfile `.zshrc` (typically present in the user's home directory -
-`/Users/<username>/`) can be used to configure the user's zsh shell.
+Dotfiles are hidden files that are used to configure computer programs.
 
-# The problem with dotfiles
+For example,
+
+1. The dotfile `.zshrc` (located at `/Users/<username>/`) is used to configure
+   the user's zsh shell.
+
+2. The dotfile `keybindings.json` (located at
+   `/Users/<username>/Library/Application Support/Code/User`) is used to add,
+   remove and modify keyboard shortcuts for vscode.
+
+Computers hide files and directories whose name starts with a `.`, so dotfiles
+are typically hidden.
+
+# Why should I care about dotfiles?
 
 ## Owning multiple computers
 
-Let's say, recently at work your task involves frequently making small changes
-to the codebase and then pushing them to the remote (think testing a CI by trail
-& error). After scambling through the clunky GUI of vscode to press the "Push
-commit" button often, you feel that you will highly benefit from adding a
-keyboard shortcut to push the commits to the remote. So you add the keyboard
-shortcut and it feels very ergonomic, within hours/days your mind/nervous system
-gets used to the keybinding & you start to take it for granted. When you hop
-onto your personal computer after work hours or in the weekend you will badly
-miss this keybinding (trust me bro 😀)! You now have to manually copy all the
-keybindings & settings that you changed in your work computer to your personal
-computer typically by pressing buttons on a GUI (Graphical User Interface).
+Let's say, recently at work your task involves frequently making small change to
+the codebase and pushing it to Github. After scambling through the clunky GUI of
+vscode to press the "Push commit" button multiple times, you feel that you will
+highly benefit from adding a keyboard shortcut to push commits to Github. So you
+add the keyboard shortcut and it feels very ergonomic, within hours/days your
+mind/nervous system gets used to the keyboard shortcut & you start to take it
+for granted. When you hop onto your personal computer after work hours or in the
+weekend you will badly miss this keyboard shortcut (trust me bro 😀)! You now
+have to manually copy all the keyboard shortcuts & settings that you changed in
+your work computer to your personal computer typically by pressing buttons on a
+GUI (Graphical User Interface).
 
 This might sound silly, but I think this small inconvenience of manually syncing
 the configurations between multiple computers makes using multiple computers
@@ -56,107 +65,111 @@ more ergonomic than others (even though it might not be true, its just
 computer because you feel the most productive in it.
 
 Using multiple computers become very practical when you get the same experience
-across your computers with very small effort.
+across your computers with very little effort.
 
-What if you were able to sync your settings & keybinding across computers using
-a single (obiviously familiar) command,
+Virtual machines & Docker containers can also be considered "computers", if you
+are someone who spends a lot of time in virtual machines or docker containers,
+consistent experience (think system settings, installed programs, keyboard
+shortcuts, appearance, etc.) across your hosts, virtual machines & containers
+could be extremely valuable.
+
+What if you were able to sync your settings & keyboard shortcuts across
+computers using a single (obiviously familiar) command,
 
 ```bash
 git pull origin main
 ```
 
-Virtual machines & Docker containers can also be considered "computers", if you
-are someone who spends a lot of time in virtual machines or docker containers,
-consistent experience (think system settings, installed programs, custom
-keybindings, appearance, etc.) across your hosts, virtual machines & containers
-could be extremely valuable.
+We will discuss how to set this up in this blog post.
 
-## New computers (also think virtual machines & Docker containers)
+## New computers
 
 Typically, most computer users tend to configure their computers for better
-ergonomics or higher productivity - to finish their work faster. Configurations
-might range from switching on the Dark theme, installing/uninstalling programs,
-modifying/adding keybindings, tweaking performance, changing a program's
-appearance, etc.
+ergonomics or to increase their productivity (to finish their work faster).
+Configurations might range from switching on the Dark theme,
+installing/uninstalling programs, modifying/adding keyboard shortcuts, tweaking
+performance, changing a program's appearance, etc.
 
 Letting go of a computer and setting up everything from scratch on a new
-computer could be daunting especially for users who would have invested a lot of
-time & energy configuring their computer the way they like.
+computer could be daunting especially for users who have invested a lot of time
+& energy into configuring their computer the way they like.
 
 People who work with virtual machines or Docker containers a lot might even
 change their "computers" in hours or days! Setting up new "computers" frequently
 by clicking buttons in a GUI or by typing/pasting tons of commands in a shell is
-not practical. Obiviously, tools like `docker build`, Ansible playbook, etc.
-help us solve this problem (we will be discussing tools like these in-depth in
-this blog post).
+not practical.
 
 ## Version control
 
 We must be able to track what changes we made to our dotfiles, when and for what
 purpose... This allows us to revert changes we didn't like, also we would be
 able to debug and fix issues confidently without second guessing what worked and
-what didn't.
+what didn't. For example, if you added a keyboard shortcut in vscode and didn't
+like it after a week of usage, you can easily go through the Git commit history
+and remove it.
 
-The way I manage my dotfiles is opinionated, for example I prefer to use normal
-git repo & symlink dotfiles to their locations instead of using a "bare git
-repository"... I am aware that there are multiple ways to accompolish the same
-objectives in software engineering... So use this blog post as a gentle
-introduction to some neat tools & technics that are available to manage
-dotfiles.
+# Tutorial
 
-# Dotfiles repo
+1. Create a directory named `dotfiles` at `/User/<username>/` and initailize a
+   git repository in it.
 
-Create a directory (name it `.dotfiles`) and move all of your dotfiles into it.
+   ```bash
+   mkdir ~/dotfiles
+   cd ~/dotfiles
+   git init
+   ```
 
-For example, let's move vscode's settings into it,
+2. Move your dotfiles files into the directory. Let's start by moving vscode's
+   `keybindings.json` (a file that stores keyboard shortcuts of vscode) into
+   `~/dotfiles`.
 
-```bash
-mv "~/Library/Application Support/Code/User/settings.json" ~/.dotfiles/vscode/settings.json # macOS
-```
+   ```bash
+   mkdir vscode
+   mv "~/Library/Application Support/Code/User/keybindings.json" ~/dotfiles/vscode/keybindings.json
+   ```
 
-Initialize a git repo in the directory.
+3. Commit the changes.
 
-```bash
-git init
-```
+   ```bash
+   git add .
+   git commit -m 'added vscode/keybindings.json'
+   ```
 
-We will symlink the `settings.json` back to
-`~/Library/Application Support/Code/User/` using a neat tool named GNU stow.
+   If you open vscode now, all of the keyboard shortcuts must have went back to
+   their default values because vscode looks for `keybindings.json` file at
+   `~/Library/Application Support/Code/User/keybindings.json` but we have moved
+   it to `~/dotfiles`!
 
-# Warning
+   To get all of your keyboard shortcuts back, you can either,
 
-If you have decided to maintain your dotfiles publically make sure to not commit
-and push sensitive information (could include, personal email addresses, JWT
-tokens, passwords, etc.) to the remote! If you have pushed sensitive information
-to the remote accidentally, make sure to clean up the commit history.
+   1. Request vscode to look for `keybindings.json` at `~/dotfiles/vscode`. This
+      is usually impractical because most programs won't have provision for it.
 
-# Ingredients
+   2. Symlink `keybindings.json` to `~/Library/Application Support/Code/User/`.
 
-- Git & Github
+   ## Ehh? What are [symlinks](https://en.wikipedia.org/wiki/Symbolic_link)?
 
-- [Nix (the package manager)](https://nixos.org/download)
+4. Create symlink.
 
-- [GNU Stow](https://www.gnu.org/software/stow/)
+   ```bash
 
-- [Docker](https://www.docker.com/) (for testing/iterating your dotfiles)
+   ```
 
-- [UTM](https://mac.getutm.app) (uses QEMU under the hood) or
-  [QEMU](https://www.qemu.org) (for testing/iterating your dotfiles)
+5. Repeat for your other dotfiles.
 
-- [Ansible playbook](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
-  (optional, I have replaced it with Nix package manager in my setup)
+6. Add remote & push your commits to it.
 
-- [Homebrew](https://brew.sh/) (currently using it with nix-darwin to download &
-  install some "non-free" software)
+   ```bash
+   git remote add origin <remote-url>
+   git push origin main
+   ```
 
-# Don't stray away from the defaults (advice)
+## Warning
 
-Only use a handful of tools, also we must develop the habit of using a software
-product the way the developer of the product intended it to be used & not
-customize it too much, memorize the default keybindings (only the essential ones
-not all), study the default behaviours and do not try to make things look
-"pretty" (rabbit hole that has no end)! Do not waste time
-[ricing](https://www.reddit.com/r/unixporn/comments/3iy3wd/stupid_question_what_is_ricing/)!
-Keep things dead simple.
+If you have decided to maintain your dotfiles repo publically make sure to not
+commit and push sensitive information (could include personal email addresses,
+JWT tokens, passwords, etc.) to the remote! If you have pushed sensitive
+information to the remote accidentally, make sure to clean up the commit
+history.
 
-![Arch linux IQ curve meme](/static/images/blogs/how-to-manage-dotfiles/arch-linux-meme.webp)
+# Conclusion
