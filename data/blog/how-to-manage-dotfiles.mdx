@@ -20,10 +20,20 @@ tags:
   ]
 draft: false
 summary:
-  'A super simple and beginner friendly tutorial on how to manage dotfiles.'
+  'A dead simple tutorial on how to manage dotfiles meant for absolute
+  beginners.'
 images: ['/static/images/managing-dotfiles/dotfiles-banner.webp']
 layout: PostLayout
 ---
+
+This is a dead simple tutorial on how to manage dotfiles meant for absolute
+beginners, we won't be exploring any fancy tools (like
+[GNU stow](https://www.gnu.org/software/stow/),
+[dotbot](https://github.com/anishathalye/dotbot),
+[chezmoi](https://www.chezmoi.io/), etc.) that abstracts away the basics & makes
+our work easier, instead we will be using simple shell commands to set
+everything up from scratch to understand what most of these tools actually do
+under the hood.
 
 # What are dotfiles?
 
@@ -215,12 +225,31 @@ and remove it.
    git pull
    ```
 
-## Warning
+   ## Warning
 
-If you have decided to maintain your dotfiles repo publically make sure to not
-commit and push sensitive information (could include personal email addresses,
-JWT tokens, passwords, etc.) to the remote! If you have pushed sensitive
-information to the remote accidentally, make sure to clean up the commit
-history.
+   If you have decided to maintain your dotfiles repo publically make sure to
+   not commit and push sensitive information (could include personal email
+   addresses, JWT tokens, passwords, etc.) to the remote! If you have pushed
+   sensitive information to the remote accidentally, make sure to clean up the
+   commit history.
 
-# Conclusion
+# Where to go next?
+
+Now that you know the very basics of managing dotfiles you can further explore,
+
+- Managing dotfiles using GNU Stow
+
+- Managing dotfiles using a 'bare Git repository'
+
+- Nix (the package manager) or Ansible playbook to install programs on a new
+  computer
+
+- [Using Docker or QEMU to test your dotfiles installation process](https://shibisuriya.github.io/blog/blog/how-i-manage-my-dotfiles#ubuntu-using-docker-container)
+
+If you are looking for neat tools or technics for managing your dotfiles then
+peep my [dotfiles repo](https://github.com/shibisuriya/.dotfiles) & read my blog
+post
+['How I manage my dotfiles?'](https://shibisuriya.github.io/blog/blog/how-i-manage-my-dotfiles)
+where I explain my setup.
+
+Happy hacking.
