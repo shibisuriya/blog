@@ -80,6 +80,38 @@ async function createTagCount(allBlogs) {
   writeFileSync('./app/tag-data.json', formatted)
 }
 
+async function createSeriesCount(allBlogs) {
+  const { seriesCount }: { seriesCount: Record<string, number> } = allBlogs.reduce(
+    ({ seriesCount, series }, file) => {
+      if (file.series && !file.part) {
+        throw new Error(`For blog post "${file.title}", series 'field' is set but 'part' field is missing in frontmatter.`)
+      }
+      if (file.series) {
+        if (!(file.series in series)) {
+          series[file.series] = new Set<number>()
+          series[file.series].add(file.part)
+        } else {
+          if (series[file.series].has(file.part)) {
+            throw new Error(`${file.part} already exists in series "${file.series}". Please check the 'part' field in frontmatter of the blog post ${file.title}.`)
+          } else {
+            series[file.series].add(file.part)
+          }
+        }
+      }
+
+      if (file.series && (!isProduction || file.draft !== true)) {
+        if (file.series in seriesCount) seriesCount[file.series] += 1
+        else seriesCount[file.series] = 1
+      }
+      return { seriesCount, series }
+    },
+    { seriesCount: {}, series: {} }
+  )
+
+  const formatted = await prettier.format(JSON.stringify(seriesCount, null, 2), { parser: 'json' })
+  writeFileSync('./app/series-data.json', formatted)
+}
+
 function createSearchIndex(allBlogs) {
   if (
     siteMetadata?.search?.provider === 'kbar' &&
@@ -109,6 +141,8 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    series: { type: 'string' },
+    part: { type: 'number' },
   },
   computedFields: {
     ...computedFields,
@@ -191,5 +225,6 @@ export default makeSource({
     const { allBlogs } = await importData()
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
+    createSeriesCount(allBlogs)
   },
 })
