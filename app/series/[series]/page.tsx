@@ -5,6 +5,12 @@ import { slug } from 'github-slugger'
 import Link from '@/components/Link'
 import seriesData from 'app/series-data.json'
 
+export const generateStaticParams = async () => {
+  return Object.keys(seriesData).map((series) => ({
+    series: encodeURI(series),
+  }))
+}
+
 export default async function Page(props: { params: Promise<{ series: string }> }) {
   const params = await props.params
   const series = decodeURI(params.series)
