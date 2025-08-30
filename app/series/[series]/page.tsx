@@ -13,7 +13,9 @@ export default async function Page(props: { params: Promise<{ series: string }> 
   const series = decodeURI(params.series)
   // const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   const filteredPosts = allCoreContent(
-    sortPosts(allBlogs.filter((post) => post.series && slug(post.series) === series))
+    sortPosts(allBlogs.filter((post) => post.series && slug(post.series) === series)).sort(
+      (a, b) => a.part! - b.part!
+    )
   )
   const sortedSeriesData = Object.keys(seriesData).sort((a, b) => seriesData[b] - seriesData[a])
 

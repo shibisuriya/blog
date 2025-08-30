@@ -1,5 +1,5 @@
 ---
-title: 'Tutorial: How to manage dotfiles'
+title: 'Tutorial 1: How to manage dotfiles'
 date: '2025-08-19'
 lastmod: '2025-08-19'
 tags:
@@ -19,9 +19,12 @@ tags:
     'devops',
   ]
 draft: false
+series: 'How to manage dotfiles'
+part: 1
+partType: 'tutorial'
 summary:
-  'A dead simple tutorial on how to manage dotfiles meant for absolute
-  beginners.'
+  'A dead simple tutorial on how to manage dotfiles by manually creating
+  symlinks.'
 images: ['/static/images/managing-dotfiles/dotfiles-banner.webp']
 layout: PostLayout
 ---
@@ -235,14 +238,23 @@ and remove it.
 
 # Where to go next?
 
-Now that you know the very basics of managing dotfiles you can further explore,
+Now that you know what dotfiles are, why you should manage them? & how to manage
+them bycreating symlinks manually, you can further explore,
 
 - Managing dotfiles using GNU Stow
 
 - Managing dotfiles using a 'bare Git repository'
 
-- Nix (the package manager) or Ansible playbook to install programs on a new
-  computer
+- You can use Nix (the package manager) or Ansible playbook to setup new
+  computers in minutes,
+
+  - You will able to install all of the software applications you need (Chrome,
+    Firefox, Neovim, Obsidian, etc.) on a new computer by running a couple of
+    commands.
+
+  - You will be able to configure your computer the way you want (dark mode
+    enabled, point & click enabled, etc.) by editing text files & then running a
+    couple of commands.
 
 - [Using Docker or QEMU to test your dotfiles installation process](https://shibisuriya.github.io/blog/blog/how-i-manage-my-dotfiles#ubuntu-using-docker-container)
 
