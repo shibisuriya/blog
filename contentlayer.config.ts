@@ -143,6 +143,7 @@ export const Blog = defineDocumentType(() => ({
     canonicalUrl: { type: 'string' },
     series: { type: 'string' },
     part: { type: 'number' },
+    partType: { type: 'string', enum: ['Post', 'Tutorial', 'Lesson', 'Part'], default: 'Part' },
   },
   computedFields: {
     ...computedFields,
