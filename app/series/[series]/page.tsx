@@ -1,12 +1,9 @@
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import { allBlogs } from 'contentlayer/generated'
-import { genPageMetadata } from 'app/seo'
 import { Posts } from '@/components/Posts'
 import { slug } from 'github-slugger'
 import Link from '@/components/Link'
 import seriesData from 'app/series-data.json'
-
-export const metadata = genPageMetadata({ title: 'Series' })
 
 export default async function Page(props: { params: Promise<{ series: string }> }) {
   const params = await props.params
