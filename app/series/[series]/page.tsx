@@ -7,7 +7,7 @@ import seriesData from 'app/series-data.json'
 
 export const generateStaticParams = async () => {
   return Object.keys(seriesData).map((series) => ({
-    series: encodeURI(series),
+    series: slug(series),
   }))
 }
 
