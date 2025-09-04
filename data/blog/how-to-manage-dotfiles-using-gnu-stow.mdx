@@ -1,0 +1,108 @@
+---
+title: 'Tutorial 2: How to manage dotfiles using GNU Stow'
+date: '2025-08-19'
+lastmod: '2025-08-19'
+tags:
+  [
+    'tutorial',
+    'dotfiles',
+    'distro-hopping',
+    'developer-productivity',
+    'ricing',
+    'docker',
+    'unix',
+    'linux',
+    'gnu-stow',
+    'neovim',
+    'ansible-playbook',
+    'lab',
+    'devops',
+  ]
+draft: false
+series: 'How to manage dotfiles'
+part: 2
+summary:
+  'We will be improving our dotfiles setup from tutorial 1 using GNU stow.'
+images: ['/static/images/managing-dotfiles/dotfiles-banner.webp']
+layout: PostLayout
+---
+
+Now that you know
+[what dotfiles are](/blog/how-to-manage-dotfiles#what-are-dotfiles),
+[the benefits you can experience by managing them](/blog/how-to-manage-dotfiles#why-should-i-care-about-dotfiles)
+&
+[how to manage them by moving them into a git repository & manually creating symlinks for them using the `ln` command](/blog/how-to-manage-dotfiles#tutorial),
+we will be improving our existing setup from tutorial 1 using
+[GNU Stow](https://www.gnu.org/software/stow/) - a neat tool that automates the
+process of creating & removing symlinks.
+
+# Existing setup
+
+We have created a git repo at `~/Desktop/dotfiles` using the `git init` command
+& moved all of our dotfiles into it. We are then symlinking each dotfile to its
+original location using the `ln` command. For example, the bash shell looks for
+`.bashrc` (bash's configuration file) at `~` (user's home directory -
+`/user/<username>`).
+
+```bash
+cd ~/Desktop/dotfiles
+ln -s .bashrc ~/ # Use this command for your other dotfiles as well.
+```
+
+Since we have multiple dotfiles in our git repository, typing & executing the
+`ln` command for each dotfile is annoying! So we have written the `ln` commands
+to symlink all the dotfiles to their original location in a shell script -
+`symlink.zsh`.
+
+To symlink all of your dotfiles to their original location,
+
+```bash
+./symlink.zsh
+```
+
+We will be replacing
+[`symlink.zsh`](/blog/how-to-manage-dotfiles#ehh-what-are-symlinks) (a shell
+script that symlinks each dotfile to its original location) with GNU Stow in
+this tutorial.
+
+# Tutorial
+
+Assuming your dotfiles repo is located at `~/Desktop/dotfiles`,
+
+1. Remove `symlink.zsh`,
+
+   ```bash
+   cd ~/Desktop/dotfiles
+   rm symlink.zsh
+   ```
+
+1. Install GNU Stow,
+
+   - On macOS, using Homebrew,
+
+     ```sh
+     brew install stow
+     ```
+
+   - On Debian/Ubuntu based distros, using apt,
+
+     ```sh
+     sudo apt install stow
+     ```
+
+   ```bash
+   cd ~/Desktop/dotfiles
+   ls -a
+   ```
+
+   Will print,
+
+   ```bash
+   .  ..  .bashrc  keybindings.json
+   ```
+
+   The default `target` directory is parent of the current directory.
+
+   There are two ways to solve this problem,
+
+   1. Move your dotfiles repo to your home directory (`~`).
