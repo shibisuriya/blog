@@ -31,10 +31,13 @@ Now that you know
 [what dotfiles are](/blog/how-to-manage-dotfiles#what-are-dotfiles),
 [the benefits you can experience by managing them](/blog/how-to-manage-dotfiles#why-should-i-care-about-dotfiles)
 &
-[how to manage them by moving them into a git repository & manually creating symlinks for them using the `ln` command](/blog/how-to-manage-dotfiles#tutorial),
+[how to manage them by moving them into a git repository & manually symlinking them to their original location using the `ln` command](/blog/how-to-manage-dotfiles#tutorial),
 we will be improving our existing setup from tutorial 1 using
 [GNU Stow](https://www.gnu.org/software/stow/) - a neat tool that automates the
 process of creating & removing symlinks.
+
+We will first revisit our existing setup, learn what GNU Stow is, its quirks and
+then integrate it into our existing setup.
 
 # Existing setup
 
@@ -46,13 +49,14 @@ original location using the `ln` command. For example, the bash shell looks for
 
 ```bash
 cd ~/Desktop/dotfiles
-ln -s .bashrc ~/ # Use this command for your other dotfiles as well.
+ls -a
+.  ..  .bashrc  keybindings.json
+ln -s .bashrc ~/
 ```
 
 Since we have multiple dotfiles in our git repository, typing & executing the
 `ln` command for each dotfile is annoying! So we have written the `ln` commands
-to symlink the dotfiles to their original location in a shell script -
-`symlink.zsh`.
+in a shell script - `symlink.zsh`.
 
 To symlink all of your dotfiles to their original location,
 
@@ -66,15 +70,6 @@ script that symlinks each dotfile to its original location) with GNU Stow in
 this tutorial.
 
 # Tutorial
-
-Assuming your dotfiles repo is located at `~/Desktop/dotfiles`,
-
-1. Remove `symlink.zsh`,
-
-   ```bash
-   cd ~/Desktop/dotfiles
-   rm symlink.zsh
-   ```
 
 1. Install GNU Stow,
 
@@ -90,6 +85,15 @@ Assuming your dotfiles repo is located at `~/Desktop/dotfiles`,
      sudo apt install stow
      ```
 
+Assuming your dotfiles repo is located at `~/Desktop/dotfiles` on your computer,
+
+2. Remove `symlink.zsh` from
+   [tutorial 1](http://localhost:3000/blog/how-to-manage-dotfiles),
+
+   ```bash
+   cd ~/Desktop/dotfiles
+   rm symlink.zsh
+   ```
    ```bash
    cd ~/Desktop/dotfiles
    ls -a
