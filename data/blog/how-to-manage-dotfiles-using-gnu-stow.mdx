@@ -87,19 +87,71 @@ this tutorial.
 
 Assuming your dotfiles repo is located at `~/Desktop/dotfiles` on your computer,
 
-2. Remove `symlink.zsh` from
-   [tutorial 1](http://localhost:3000/blog/how-to-manage-dotfiles),
+2.  Let's remove `symlink.zsh` - a shell script that symlinks our dotfiles to
+    their original location. As mentioned earlier we will be replacing
+    `symlink.zsh` with GNU Stow.
 
-   ```bash
-   cd ~/Desktop/dotfiles
-   rm symlink.zsh
-   ```
-   ```bash
-   cd ~/Desktop/dotfiles
-   ls -a
-   ```
+    ```bash
+    cd ~/Desktop/dotfiles
+    rm symlink.zsh
+    ```
 
-   Will print,
+3.  Create Stow packages.
+
+    Let's create Stow packages first, I will explain what Stow packages are
+    later.
+
+    ```bash
+    cd ~/Desktop/dotfiles
+    ls -a
+    .  ..  .bashrc  keybindings.json kitty.conf
+    ```
+
+    We have 3 dotfiles in our repo,
+
+    - `.bashrc` is bash shell's configuration file, bash looks for `.bashrc` at
+      `~` - the user's home directory (`/Users/<username>`).
+
+    - `kitty.conf` is kitty's (a terminal emulator) configuration file, kitty
+      looks for `kitty.conf` at `~/.config/kitty/`.
+
+    - Visual Studio Code stores its keyboard shortcuts in `keybindings.json`, it
+      looks for `keybindings.json` at `~/Library/Application Support/Code/User`
+      in macOS and at `~/.config/Code/User` in Linux.
+
+    To create stow packages,
+
+    - Create a directory named `bash` in your dotfiles repo & move `.bashrc`
+      into it.
+
+    - Create a directory named `vscode` in your dotfiles repo & move
+      `keybindings.json` into it.
+
+    - Create a directory named `kitty` in your dotfiles repo, inside the `kitty`
+      directory create a directory named `.config`, inside the `.config`
+      directory create a directory named `kitty` & move `kitty.conf` into it.
+
+    Your dotfiles repo's directory structure should look something like this,
+
+    ```bash
+    ~/Desktop/dotfiles
+    ❯ tree -a
+    .
+    ├── bash
+    │   └── .bashrc
+    ├── kitty
+    │   └── .config
+    │       └── kitty
+    │           └── kitty.conf
+    └── vscode
+      └── keybindings.json
+
+    6 directories, 3 files
+    ```
+
+    The root directory of your dotfiles repo is called the 'Stow directory'
+    (`~/Desktop/dotfiles`) and its subdirectories `bash`, `vscode` & `kitty` are
+    called 'Stow packages'.
 
    ```bash
    .  ..  .bashrc  keybindings.json
