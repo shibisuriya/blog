@@ -235,7 +235,85 @@ Assuming your dotfiles repo is located at `~/Desktop/dotfiles` on your computer,
     stow -D vscode -t "~/.config/Code/User" # In Linux.
     ```
 
-8.  Automate using a shell script,
+8.  Putting it all together.
+
+    We have 2 problems,
+
+    1. We can't remember all the stow package names & their target directory.
+
+    2. The target directory of some Stow packages depend on the operating
+       system.
+
+    To solve these 2 problems let's write a shell script that determines the
+    computer's operating system & stows/unstows all of the stow packages to
+    their target location.
+
+    Create a shell script,
+
+    ```bash
+    touch stow.zsh
+    chmod +x stow.zsh
+    ```
+
+    Paste the code given below in `stow.zsh`,
+
+    ```bash
+    #!/bin/zsh
+    unstow=false
+    for arg in "$@"; do
+      if [[ "$arg" == "-D" ]]; then
+        unstow=true
+      fi
+    done
+
+    stow_unstow_package() {
+      local package_name=$1
+      local target=$2
+
+      if [[ "$unstow" == true ]]; then
+        echo "Unstowing package: $package_name"
+        stow -t "$target" -D "$package_name"
+      else
+        echo "Stowing package: $package_name"
+        stow -t "$target" "$package_name"
+      fi
+    }
+
+
+    packages=()
+
+    if [[ "$(uname)" == "Darwin" ]]; then
+      # For macOS
+      packages=("bash" "kitty")
+      vscode_settings_dir="$HOME/Library/Application Support/Code/User"
+
+    else
+      # For Linux
+      packages=("bash" "kitty")
+      vscode_settings_dir="$HOME/.config/Code/User"
+    fi
+
+
+    if [ -d "$vscode_settings_dir" ]; then
+        stow_unstow_package "vscode" "$vscode_settings_dir"
+    fi
+
+    for package in "${packages[@]}"; do
+      stow_unstow_package "$package" "$HOME"
+    done
+    ```
+
+    To stow your dotfiles,
+
+    ```bash
+    ./stow.zsh
+    ```
+
+    To unstow your dotfiles,
+
+    ```bash
+    ./stow.zsh -D
+    ```
 
 You can use a
 [bare git repository](/blog/how-to-manage-dotfiles-using-bare-git-repository) to
