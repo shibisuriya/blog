@@ -153,12 +153,90 @@ Assuming your dotfiles repo is located at `~/Desktop/dotfiles` on your computer,
     (`~/Desktop/dotfiles`) and its subdirectories `bash`, `vscode` & `kitty` are
     called 'Stow packages'.
 
-   ```bash
-   .  ..  .bashrc  keybindings.json
-   ```
+4.  We have 3 stow packages now, the command to stow (to create symlinks)
+    packages to their target location is,
 
-   The default `target` directory is parent of the current directory.
+    ```bash
+    stow <package-name> -t <target-directory>
+    ```
 
-   There are two ways to solve this problem,
+5.  Let's first stow the packages `bash` & `kitty`,
 
-   1. Move your dotfiles repo to your home directory (`~`).
+    ```bash
+    ~/Desktop/dotfiles
+    ❯ tree -a kitty bash
+    kitty
+    └── .config
+        └── kitty
+            └── kitty.conf
+    bash
+    └── .bashrc
+
+    4 directories, 2 files
+    ```
+
+    ```bash
+    stow bash kitty -t ~
+    ```
+
+    Observe the directory structure of the stow packages & the locations where
+    the symlinks are created,
+
+    - `.bashrc` will be symlinked to `~/.bashrc`.
+
+    - `kitty.conf` will be symlinked to `~/.config/kitty/kitty.conf`.
+
+    GNU Stow uses the directory structure of the stow package & the path
+    supplied to `-t` to determine where the symlinks needs to be created.
+
+    So, if your stow package's directory structure is,
+
+    ```bash
+    ~/Desktop/dotfiles
+    ❮ tree  a
+    a
+    └── b
+        └── c
+            └── d.txt
+
+    3 directories, 1 file
+    ```
+
+    And the path supplied to `-t` is `~/Desktop`, then the file `d.txt` will be
+    symlinked to `~/Desktop/a/b/c/d.txt`.
+
+6.  Stow the `vscode` package,
+
+    ```bash
+    stow vscode -t "~/Library/Application Support/Code/User" # In macOS.
+    stow vscode -t "~/.config/Code/User" # In Linux.
+    ```
+
+    As mentioned earlier Visual Studio Code expects `keybindings.json` at
+    `~/Library/Application Support/Code/User` in macOS & at
+    `~/.config/Code/User` in Linux.
+
+7.  The command to unstow packages (to remove the symlinks) is,
+
+    ```bash
+    stow -D <package-name> -t <target-directory>
+    ```
+
+    To unstow `kitty` & `bash`,
+
+    ```bash
+    stow -D kitty bash -t ~
+    ```
+
+    To unstow `vscode`,
+
+    ```bash
+    stow -D vscode -t "~/Library/Application Support/Code/User" # In macOS.
+    stow -D vscode -t "~/.config/Code/User" # In Linux.
+    ```
+
+8.  Automate using a shell script,
+
+You can use a
+[bare git repository](/blog/how-to-manage-dotfiles-using-bare-git-repository) to
+manage your dotfiles if you don't prefer creating symlinks.
