@@ -1,5 +1,5 @@
 ---
-title: 'Are you someone that copies or moves huge computer files often?'
+title: 'Are you someone who copies or moves huge computer files often?'
 date: '2025-08-19'
 lastmod: '2025-08-19'
 tags:
@@ -14,7 +14,7 @@ tags:
     'sys-ops',
     'devops',
   ]
-draft: true
+draft: false
 series: 'Shell utils'
 part: 3
 summary:
@@ -23,7 +23,7 @@ images: ['/static/images/managing-dotfiles/dotfiles-banner.webp']
 layout: PostLayout
 ---
 
-Are you someone that copies or moves huge computer files often? For example, you
+Are you someone who copies or moves huge computer files often? For example, you
 could be a photographer who moves the captured photos & videos from your camera
 to your computer to free up some space on your camera, you could be a devops or
 cloud engineer who moves media files, pdf files, machine learning models, etc.
@@ -36,5 +36,17 @@ The annoying part about copying/moving huge computer files is the operation
 could be easily interrupted. Imagine you are moving 1 TB of photographs & videos
 from your digital camera to your computer by connecting them using a cable, the
 operation takes some time to complete & it could fail due to multiple reasons,
-the cable could be disturbed, your computer could shutdown due to a power
-outage, etc.
+your computer could have shutdown due to a power outage, the cable could have
+moved causing disconnection, etc.
+
+If a copy or move operation fails, to be on the safer side you have to restart
+the operation... The move operation is suspended in A failed "move" operation is
+super annoying, some of your files are left at the source & the remaining are
+moved to the target.
+
+Also the move operation is super annoying if it fails, some of the files &
+directories will be left at the source the others would have been moved to the
+target.
+
+Because of this reason, I prefer to copy the files or directories to the target
+location & them delete the original instead of moving them (cut the paste).
