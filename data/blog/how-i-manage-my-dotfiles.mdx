@@ -20,7 +20,7 @@ tags:
     'ops',
   ]
 series: 'How to manage dotfiles'
-part: 3
+part: 4
 partType: 'Tutorial'
 draft: false
 summary:
@@ -188,7 +188,7 @@ To build a Ubuntu based Docker image that has most of the programs I need & my
 dotfiles installed,
 
 ```bash
-docker build --target prod -t dotfiles .
+docker build --no-cache --target prod -t dotfiles .
 ```
 
 Since this image has my dotfiles installed & all of the programs I absolutely
