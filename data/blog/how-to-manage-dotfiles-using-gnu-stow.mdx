@@ -216,6 +216,96 @@ Assuming your dotfiles repo is located at `~/Desktop/dotfiles` on your computer,
     `~/Library/Application Support/Code/User` in macOS & at
     `~/.config/Code/User` in Linux.
 
+## The confusing parts in most of the popular tutorial on ['How to manage dotfiles using GNU Stow?'](https://www.youtube.com/watch?v=WpQ5YiM7rD4)
+
+In this section we will explore some of the bad practices used in most of the
+popular tutorial on 'How to manage dotfiles using GNU Stow?'.
+
+### Users that keep all of their dotfiles in the dotfiles repo's root directory instead of arranging them as Stow packages
+
+You can `cd` into a stow package & run `stow . -t <target-directory>` to stow a
+Stow package instead of mentioning the Stow package's name in the `stow`
+command.
+
+So instead of,
+
+```bash
+cd ~/Desktop/dotfiles # Root directory of the dotfiles git repo.
+
+stow bash -t ~
+# Have mentioned the name of the stow
+# package in the command itself - bash.
+```
+
+you can use,
+
+```bash
+cd ~/Desktop/dotfiles/bash # The subdirectory `bash` is a stow package.
+
+stow . -t ~
+# GNU Stow assumes that the current working directory is the Stow package.
+```
+
+The point is GNU Stow can't work without Stow packages, most of the popular
+tutorial on 'How to manage dotfiles using GNU Stow?' available online are
+confusing because they don't arrange their dotfiles as Stow packages instead
+they place all of their dotfiles in the root directory of their dotfiles git
+repo & run the `stow . -t ~` command, in this case GNU Stow treats the root
+directory of the dotfiles repo as the Stow package.
+
+So instead of arranging your dotfiles as Stow packages,
+
+```bash
+~/Desktop/dotfiles
+❯ tree -a kitty bash
+kitty
+└── .config
+    └── kitty
+        └── kitty.conf
+bash
+└── .bashrc
+
+4 directories, 2 files
+```
+
+You can place all of your dotfiles in the root directory of your dotfiles repo,
+
+```bash
+❯ tree -a
+.
+├── .bashrc
+└── .config
+    └── kitty
+        └── kitty.conf
+
+3 directories, 2 files
+```
+
+& run the `stow . -t ~` command,
+
+`.bashrc` will get symlinked to `~/.bashrc` & `kitty.conf` will get symlinked to
+`~/.config/kitty/kitty.conf`.
+Some [GNU Stow users](https://github.com/omerxx/dotfiles/blob/master/.stowrc)
+prefer to mention the target directory in the `.stowrc` file (placed at dotfiles
+repo's root directory) instead of mentioning the target directory using the `-t`
+option.
+
+The default 'target directory' is the parent directory of the 'Stow directory'.
+That is, if you run the command `stow .` from `~/Desktop/dotfiles` (the Stow
+directory in this case) then `~/Desktop` is the target directory. Some GNU Stow
+users prefer to clone their dotfiles repo at `~` so that they don't have to
+mention the target directory using the `-t` option!
+
+So, lets move our dotfiles repo from `~/Desktop/dotfiles` to `~`.
+
+```bash
+mv ~/Desktop/dotfiles ~
+cd ~
+stow bash
+# No need to mention the target directory using the `-t` option
+# because the parent directory is the default target directory (`~` in this case).
+```
+
 7.  The command to unstow packages (to remove the symlinks) is,
 
     ```bash
