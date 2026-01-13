@@ -1,0 +1,335 @@
+---
+title: 'What is CORS?'
+date: '2024-01-06'
+lastmod: '2024-01-06'
+tags: ['HTTP', 'Javascript', 'Browsers', 'curl']
+series: 'Web security'
+part: 1
+draft: true
+summary:
+  'Release of Tailwind Nextjs Starter Blog template v2.0, refactored with Nextjs
+  App directory and React Server Components setup.Discover the new features and
+  how to migrate from V1.'
+images: ['static/images/devops-logo.png']
+---
+
+## What are 'web resources'?
+
+HTTP servers host web resources, a 'web resource' could be a HTML file, a
+Javascript file, a .css file, an image, etc. HTTP clients (could be a web
+browser, curl, Postman, etc.) can access a web resource hosted by a HTTP server
+using the web resource's URL.
+
+## What is an 'URL'?
+
+Every resource that exists in the web has a unique address, the unique address
+of a resource in the web is also called its URL (Uniform Resource Locator). A
+URL is a combination of protocol (schema), hostname (domain), port & path that
+uniquely identifies a resource in the web.
+
+The address of my resume which exists in the web is
+`https://shibisuriya.github.io/blog/static/shibi-resume.pdf`,
+
+For example, this command downloads my resume (a resource) hosted by Github
+pages (a HTTP server) using curl (a HTTP client),
+
+```bash
+curl -O https://shibisuriya.github.io/blog/static/shibi-resume.pdf
+```
+
+Obiviously, the resume (a resource) can also be accessed using a web browser
+(another HTTP client).
+
+For a web resource that can be accessed using the URL
+`https://shibisuriya.github.io/blog/static/shibi-resume.pdf`,
+
+- The protocol is 'https'.
+
+- The hostname is 'shibisuriya.github.io'.
+
+- The port is '8080' (default port).
+
+- & the path is '/blog/static/shibi-resume.pdf'.
+
+## A resource might depend on other resources
+
+A resource might depend on other resources. For example,
+
+<u>index.html</u>
+
+```html
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css"></link>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <h1>User</h1>
+  </body>
+</html>
+```
+
+<u>user.json</u>
+
+```json
+{
+  "name": "Shibi Suriya",
+  "picture": "picture.jpeg",
+  "height": "170cm",
+  "weight": "75kg"
+}
+```
+
+<u>script.js</u>
+
+```js
+fetch('user.json')
+  .then((res) => res.json())
+  .then((user) => {
+    const body = document.body
+    const container = document.createElement('div')
+    container.innerHTML = `
+      <h2>${user.name}</h2>
+      <img src="${user.picture}" alt="${user.name}" width="150" />
+      <p>Height: ${user.height}</p>
+      <p>Weight: ${user.weight}</p>
+    `
+    body.appendChild(container)
+  })
+  .catch((err) => console.error(err))
+```
+
+When I type `localhost:8080` in my web browser & press enter, the browser
+creates a HTTP request to download the index.html file, when the file is
+downloaded the browser parses its content, it realizes that the html page
+"depends" on a Javascript file named 'script.js' & a style sheet name
+'styles.css' & it creates subsequent http requests to download them as well...
+When the main.js file is download the browser parses is & when the <img /> tag
+is appended to the DOM, the browser automatically creates a http request to
+download `picture.jpeg`.
+
+The point is resources depend on other resources. For example index.html depends
+on script.js & style.css & script.js depends on user.json, after the script.js
+done executing index.html depends on picture.jpeg. A typical web page is a
+mixture of resources.
+
+## A resource that a resource depends on might have different origin
+
+### What is 'origin'?
+
+The combination of schema, hostname & port using which a web resource is
+accessed is called its 'origin'.
+
+The origin of a web resource that can be accessed using the URL
+`http://localhost:8080/about.html` is `http://localhost:8080`.
+
+### What is 'same origin'?
+
+Web resources that have the same schema, hostname & port have the 'same origin'.
+
+For example,
+
+```html
+<html>
+  <body>
+    <div>
+      <h1>Fullstack developer</h1>
+      <img src="http://localhost:8080/fullstack.png"></img>
+    </div>
+    <div>
+      <h1>Devops</h1>
+      <img src="/devops.jpeg"></img>
+    </div>
+    <div>
+      <h1>Backend engineer</h1>
+      <img src="http://localhost:8081/assets/images/backend.png" />
+    </div>
+  </body>
+</html>
+```
+
+Assuming the html file defined above can be accessed using the URL
+`http://locahost:8080/docs/software-engineering.html`
+
+The origin of the `software-engineering.html`, `devops.jpeg` & `fullstack.png`
+is same (`http://localhost:8080`)
+
+A user can access a web resource using a HTTP client.
+
+For example, the resources having the URLs `http://localhost:8080/index.html` &
+`http://localhost:8080/image.jpeg` belong to same origin
+(`http://localhost:8080`).
+
+## A resource that another resource depends on might belong to another origin.
+
+For example,
+
+```html
+<html>
+  <body>
+    <img src="http://locahost:8081/image.jpeg" />
+  </body>
+</html>
+```
+
+Assuming the URL for the html file mention above is `http://localhost:8080`
+
+A website loading in the browser can send http request to other websites!
+
+The point is a resource opened in a browser can download resources from others
+websites.
+
+Hmmm so a resource can depend on another resource & these two resources can live
+in different origins! if that were the case can I read a user's bank balance
+from a website that I own?
+
+I own the website 'https://shibisuriya.github.io/blog', can I read my visitors
+bank balance (assuming he is logged into his net banking account)?
+
+I can secretly add a few lines of javascript to fetch the bank balance my
+visitor in my website,
+
+```html
+<html>
+  <script>
+    fetch('https://www.bank.com/api/statement')
+      .then((res) => res.json())
+      .then((res) => {
+        // write the res to a db so that I can access it later.
+      })
+  </script>
+
+  <body>
+    Code for my actual blog/personal portfolio...
+  </body>
+</html>
+```
+
+As soon as a visitor vists my blog/personal portfolio I instrument my website to
+create a http request from the user's browser to get the user's bank balance...
+Assuming he is logged into his bank account I would be able to access his bank
+balance, I will write this to data to a db so that I can view them later.
+
+But if this was possible then the web is not safe to do any critical activities,
+link net banking, e-commerce, etc.
+
+Assuming CORS is implemented properly in the bank's website, the HTTP server of
+the bank will send me the visitor's personal information (the bank balance) but
+I won't be able to read them because as soon as the response enters the user's
+browser the browser will reject the response.
+
+Wait what? The bank's server will send me my visitor's bank balance? Yes! The
+bank's HTTP server will send the bank balance of my visitor to my website that
+is opened on my visitor's browser, but the browswer won't able able to recieve
+it!
+
+Yes, the bank's HTTP server will send the requested data but the browser will be
+able to recieve it!
+
+## The 'allow-access-control-origin' response header
+
+As mentioned above, I can add few lines of code to fetch & save my personal
+website's visitor's bank balance (assuming he uses www.bank.com & he is logged
+in)... When a user visits my personal website I can initate a http request to
+read their bank balance.
+
+The browser will only allow a response that has the
+'allow-access-control-origin' header whose value is the current origin. Meaning
+I can only access the response from my website only if the response sent by the
+bank has the response header "allow-access-control-origin":
+"https://shibisuriya.github.io/blog" or else the bank will send the response but
+I won't be able to read it...
+
+So as mentioned earlier the server will send me the response & I would be able
+to read it... But what about POST requests, I don't want to know the user's bank
+balance but I want to transfer some funds to my his/her bank account to mine!
+
+What if I added a couple of lines of code to my blog?
+
+```html
+<html>
+  <script>
+    fetch('https://www.bank.com', { method: 'post' }).then()
+  </script>
+</html>
+```
+
+CORS is a mechanism that websites use protect their users from other websites!
+
+## What are http cookies?
+
+There are two types of cookies,
+
+1. Set by the browser,
+
+```js
+cookies.setItem('msg': 'Hi!')
+```
+
+For example you can send
+
+```html
+<html>
+  <body>
+    <img src="www.bank.com/image-1.jpg" />
+  </body>
+</html>
+```
+
+The http server must be able decide dec
+
+When you open `www.my-website.com`. As soon as this html file is loaded into the
+browser it,
+
+The browser opens & reads its contents &
+
+There is <img /> tag that needs to be
+
+If you were to host this html page in `my-website.com`, & open this html page by
+typing in `www.my-website.com` in a browser tab.
+
+So, as soon the html page is loaded into a browser a subsequent http get request
+to `www.bank.com` is initated to fetch the image... `www.bank.com` will send
+image-1.jpg and the image will be display.
+
+Before
+
+## What is 'origin'?
+
+A user can access a website using an url, for example `www.bank.com`, A website
+can be accessed using an url, for example `www.bank.com`.
+
+Your web browser will request the html page from `my-website.com` & render it.
+It will then make subsequent request to fetch image-1.jpg from www.bank.com &
+display it.
+
+```html
+<html>
+  <head>
+    <script></script>
+  </head>
+  <body>
+    <h1>
+      I domain address is www.my-website.com & I will initate a http request to
+      check the user's bank balance
+    </h1>
+  </body>
+</html>
+```
+
+The point is a website loaded a user's browser can make http requests to another
+website! This is called "cross origin request".
+
+So what is the big deal?
+
+The concept of CORS is
+
+A URL is required to access a resource, a URL is a combination of origin
+(protocol, hostname and port), path params & query params. A web resource can be
+accessed A website opened in a user's web browser can make "cross origin" HTTP
+requests, the HTTP server will send the web browser the resource, but the web
+browser will only accept the resource if the HTTP server has set the
+'allow-access-control-origin' response header to '\*' (all) or the origin of the
+website from which the request is getting made.
+
+This might feel unintuitive because the correct
