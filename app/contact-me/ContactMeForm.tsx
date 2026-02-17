@@ -100,9 +100,18 @@ function ContactMeForm() {
           />
         </label>
       </div>
-      {status === 'error' && (
-        <p className="text-md text-red-500">Something went wrong. Try again.</p>
-      )}
+      <div className={'flex justify-end'}>
+        <span className="text-sm">
+          Powered by{' '}
+          <a
+            target="_blank"
+            href={'https://www.staticforms.dev'}
+            className={'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'}
+          >
+            staticforms
+          </a>
+        </span>
+      </div>
       <button
         disabled={status === 'submitting'}
         className="bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-400 focus:ring-primary-600 block w-1/2 rounded-md p-2 font-medium text-white focus:ring-2 focus:ring-offset-2 focus:outline-none md:w-1/4 dark:ring-offset-black"
@@ -110,6 +119,9 @@ function ContactMeForm() {
       >
         {status === 'submitting' ? 'Sending...' : 'Send Message'}
       </button>
+      {status === 'error' && (
+        <p className="text-md text-red-500">Something went wrong. Try again.</p>
+      )}
     </form>
   )
 }
