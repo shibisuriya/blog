@@ -39,6 +39,7 @@ jobs:
           EXPORT: 1
           UNOPTIMIZED: 1
           BASE_PATH: ${{ steps.configurepages.outputs.base_path }}
+          NEXT_PUBLIC_STATICFORMS_API_KEY: ${{ vars.NEXT_PUBLIC_STATICFORMS_API_KEY }}
 
       # - name: Use Pandoc to convert my resume markdown file to a .pdf & .docx file # Use your pc to test/perfect the .pdf & .docx's style.
       #   run: |
