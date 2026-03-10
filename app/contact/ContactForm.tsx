@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-function ContactMeForm() {
+function ContactForm() {
   const [status, setStatus] = useState<'success' | 'error' | 'idle' | 'submitting'>('idle')
 
   const handleSubmit = async (e) => {
@@ -126,4 +126,4 @@ function ContactMeForm() {
   )
 }
 
-export { ContactMeForm }
+export { ContactForm }
